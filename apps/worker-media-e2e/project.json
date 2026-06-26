@@ -1,0 +1,17 @@
+{
+  "name": "worker-media-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "implicitDependencies": ["worker-media"],
+  "targets": {
+    "e2e": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
+      "dependsOn": ["worker-media:build", "worker-media:serve"],
+      "options": {
+        "jestConfig": "apps/worker-media-e2e/jest.config.cts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

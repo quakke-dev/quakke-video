@@ -1,0 +1,58 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/web-e2e"
+    },
+    {
+      "path": "./apps/web"
+    },
+    {
+      "path": "./apps/studio-e2e"
+    },
+    {
+      "path": "./apps/studio"
+    },
+    {
+      "path": "./apps/admin-e2e"
+    },
+    {
+      "path": "./apps/admin"
+    },
+    {
+      "path": "./apps/api-e2e"
+    },
+    {
+      "path": "./apps/api"
+    },
+    {
+      "path": "./apps/worker-media-e2e"
+    },
+    {
+      "path": "./apps/worker-media"
+    },
+    {
+      "path": "./apps/worker-notifications-e2e"
+    },
+    {
+      "path": "./apps/worker-notifications"
+    },
+    {
+      "path": "./packages/ui"
+    },
+    {
+      "path": "./packages/contracts"
+    },
+    {
+      "path": "./packages/api-client"
+    },
+    {
+      "path": "./packages/config"
+    },
+    {
+      "path": "./packages/testing"
+    }
+  ]
+}
