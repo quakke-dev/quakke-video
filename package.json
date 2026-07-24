@@ -2,6 +2,11 @@
   "name": "quakke-video",
   "version": "0.0.0",
   "license": "MIT",
+  "packageManager": "pnpm@10.22.0",
+  "engines": {
+    "node": ">=20.19.0 <21",
+    "pnpm": ">=10.22.0 <11"
+  },
   "scripts": {
     "prepare": "husky",
     "format": "nx format:write",
@@ -10,8 +15,12 @@
     "test": "nx run-many -t test",
     "typecheck": "nx run-many -t typecheck",
     "build": "nx run-many -t build",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "cm": "cz",
-    "graph": "nx graph"
+    "graph": "nx graph",
+    "infra:up": "docker compose up -d",
+    "infra:down": "docker compose down",
+    "infra:logs": "docker compose logs -f"
   },
   "config": {
     "commitizen": {

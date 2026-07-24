@@ -96,6 +96,17 @@
       ]
     },
     {
+      "plugin": "@nx/jest/plugin",
+      "include": [
+        "apps/api-e2e/**/*",
+        "apps/worker-media-e2e/**/*",
+        "apps/worker-notifications-e2e/**/*"
+      ],
+      "options": {
+        "targetName": "e2e"
+      }
+    },
+    {
       "plugin": "@nx/rollup/plugin",
       "options": {
         "buildTargetName": "build",

@@ -1,11 +1,13 @@
-# api-client
+# @quakke/api-client
 
-This library was generated with [Nx](https://nx.dev).
+Типизированный клиент для GraphQL и технических REST endpoint, включая upload.
+Пакет отвечает за transport, сериализацию, ошибки и отмену запросов, но не хранит
+React state и не принимает бизнес-решения.
 
-## Building
+Контракты берутся из `@quakke/contracts`. Публичный API экспортируется через
+`src/index.ts`.
 
-Run `nx build api-client` to build the library.
-
-## Running unit tests
-
-Run `nx test api-client` to execute the unit tests via [Vitest](https://vitest.dev/).
+```bash
+pnpm nx test api-client
+pnpm nx build api-client
+```

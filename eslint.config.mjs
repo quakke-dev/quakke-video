@@ -43,11 +43,11 @@ export default defineConfig(
             },
             {
               sourceTag: 'scope:worker-media',
-              onlyDependOnLibsWithTags: ['scope:worker-media', 'scope:api', 'scope:shared'],
+              onlyDependOnLibsWithTags: ['scope:worker-media', 'scope:shared'],
             },
             {
               sourceTag: 'scope:worker-notifications',
-              onlyDependOnLibsWithTags: ['scope:worker-notifications', 'scope:api', 'scope:shared'],
+              onlyDependOnLibsWithTags: ['scope:worker-notifications', 'scope:shared'],
             },
             {
               sourceTag: 'type:app',

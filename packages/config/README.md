@@ -1,11 +1,12 @@
-# config
+# @quakke/config
 
-This library was generated with [Nx](https://nx.dev).
+Общие utilities для чтения и строгой runtime-валидации конфигурации. Здесь будут
+Zod-схемы и небольшие factories, которые можно использовать в API и workers.
 
-## Building
+Пакет не хранит секреты, не читает env при импорте модуля и не содержит
+environment-specific значений.
 
-Run `nx build config` to build the library.
-
-## Running unit tests
-
-Run `nx test config` to execute the unit tests via [Vitest](https://vitest.dev/).
+```bash
+pnpm nx test config
+pnpm nx build config
+```

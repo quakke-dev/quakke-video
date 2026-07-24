@@ -1,11 +1,11 @@
-# testing
+# @quakke/testing
 
-This library was generated with [Nx](https://nx.dev).
+Общие test builders, fixtures и adapters для unit/integration/e2e тестов. Пакет не
+должен импортироваться production-кодом и не является местом для бизнес-логики.
 
-## Building
+Helpers добавляются только при реальном повторном использовании в нескольких проектах.
 
-Run `nx build testing` to build the library.
-
-## Running unit tests
-
-Run `nx test testing` to execute the unit tests via [Vitest](https://vitest.dev/).
+```bash
+pnpm nx test testing
+pnpm nx build testing
+```

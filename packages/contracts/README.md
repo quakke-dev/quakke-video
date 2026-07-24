@@ -1,11 +1,12 @@
-# contracts
+# @quakke/contracts
 
-This library was generated with [Nx](https://nx.dev).
+Переносимые контракты на границах приложений: схемы запросов, ответы, события и
+сообщения RabbitMQ. В пакете нет NestJS, React, доступа к БД и runtime-инфраструктуры.
 
-## Building
+Контракт должен иметь runtime validation там, где данные приходят извне. Breaking
+changes сообщений оформляются новой версией.
 
-Run `nx build contracts` to build the library.
-
-## Running unit tests
-
-Run `nx test contracts` to execute the unit tests via [Vitest](https://vitest.dev/).
+```bash
+pnpm nx test contracts
+pnpm nx build contracts
+```

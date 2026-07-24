@@ -7,6 +7,7 @@ export default defineConfig(() => ({
     name: 'api-client',
     watch: false,
     globals: true,
+    passWithNoTests: true,
     environment: 'node',
     include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],

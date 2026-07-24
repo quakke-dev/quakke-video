@@ -185,7 +185,7 @@ export const e2eSupportConfig = defineConfig({
 export const configFilesConfig = defineConfig({
   ...tseslint.configs.disableTypeChecked,
   name: 'quakke/config-files',
-  files: ['**/*.config.{js,cjs,mjs,ts,cts,mts}'],
+  files: ['**/*.{config,preset}.{js,cjs,mjs,ts,cts,mts}'],
   languageOptions: {
     globals: globals.node,
     parserOptions: {

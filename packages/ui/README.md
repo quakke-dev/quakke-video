@@ -1,7 +1,13 @@
-# ui
+# @quakke/ui
 
-This library was generated with [Nx](https://nx.dev).
+Общий React UI kit: primitives, accessibility, темы, tokens и визуальные состояния.
+Пакет не содержит продуктовых маршрутов, запросов к API и бизнес-логики.
 
-## Running unit tests
+Публичный API экспортируется только через `src/index.ts`. Для каждого компонента
+нужны unit-тесты и Storybook story.
 
-Run `nx test ui` to execute the unit tests via [Vitest](https://vitest.dev/).
+```bash
+pnpm nx test ui
+pnpm nx build ui
+pnpm nx storybook ui
+```

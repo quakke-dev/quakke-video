@@ -1,2 +1,11 @@
 .page {
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  padding: 24px;
+}
+
+.page h1 {
+  font-size: 32px;
+  font-weight: 700;
 }
