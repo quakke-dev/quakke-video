@@ -53,6 +53,9 @@
     },
     {
       "path": "./packages/testing"
+    },
+    {
+      "path": "./packages/eslint-config"
     }
   ]
 }

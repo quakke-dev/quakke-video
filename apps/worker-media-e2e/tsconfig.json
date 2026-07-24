@@ -4,8 +4,13 @@
     "outDir": "out-tsc/worker-media-e2e",
     "esModuleInterop": true,
     "noUnusedLocals": false,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "types": ["jest", "node"]
   },
-  "include": ["jest.config.ts", "src/**/*.ts"],
-  "references": []
+  "include": ["jest.config.cts", "src/**/*.ts"],
+  "references": [
+    {
+      "path": "../../packages/eslint-config"
+    }
+  ]
 }

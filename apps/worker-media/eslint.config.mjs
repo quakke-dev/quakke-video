@@ -1,3 +1,4 @@
-import baseConfig from '../../eslint.config.mjs';
+import rootConfig from '../../eslint.config.mjs';
+import { createConfig, nestConfig } from '../../packages/eslint-config/index.mjs';
 
-export default [...baseConfig];
+export default createConfig(rootConfig, nestConfig);

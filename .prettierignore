@@ -1,6 +1,9 @@
-# Add files here to ignore them from prettier formatting
-/dist
-/coverage
-/.nx/cache
-/.nx/workspace-data
-.nx/self-healing
+**/.next/**
+**/.nx/**
+**/coverage/**
+**/dist/**
+**/next-env.d.ts
+**/out-tsc/**
+**/storybook-static/**
+**/test-output/**
+pnpm-lock.yaml

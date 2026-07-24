@@ -3,7 +3,8 @@
   "compilerOptions": {
     "allowJs": true,
     "outDir": "out-tsc/playwright",
-    "sourceMap": false
+    "sourceMap": false,
+    "types": ["node"]
   },
   "include": [
     "**/*.ts",
@@ -21,5 +22,10 @@
     "eslint.config.js",
     "eslint.config.mjs",
     "eslint.config.cjs"
+  ],
+  "references": [
+    {
+      "path": "../../packages/eslint-config"
+    }
   ]
 }

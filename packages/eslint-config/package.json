@@ -1,0 +1,25 @@
+{
+  "name": "@quakke/eslint-config",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./index.mjs",
+  "exports": {
+    ".": "./index.mjs"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.39.4",
+    "@next/eslint-plugin-next": "^16.2.9",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsx-a11y": "6.10.1",
+    "eslint-plugin-playwright": "^1.8.3",
+    "eslint-plugin-react": "7.37.5",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "globals": "^17.7.0"
+  },
+  "peerDependencies": {
+    "eslint": "^9.22.0",
+    "typescript": ">=5.8.0 <7.0.0",
+    "typescript-eslint": "^8.62.0"
+  }
+}
