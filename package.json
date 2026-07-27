@@ -4,23 +4,35 @@
   "license": "MIT",
   "packageManager": "pnpm@10.22.0",
   "engines": {
-    "node": ">=20.19.0 <21",
+    "node": ">=24.18.0 <25",
     "pnpm": ">=10.22.0 <11"
   },
   "scripts": {
     "prepare": "husky",
+    "dev": "PORT=3333 nx run-many -t dev,serve -p web,studio,admin,api,worker-media,worker-notifications --parallel=6 --outputStyle=stream",
+    "dev:web": "nx dev web",
+    "dev:studio": "nx dev studio",
+    "dev:admin": "nx dev admin",
+    "dev:api": "PORT=3333 nx serve api",
+    "dev:worker-media": "nx serve worker-media",
+    "dev:worker-notifications": "nx serve worker-notifications",
     "format": "nx format:write",
     "format:check": "nx format:check",
     "lint": "nx run-many -t lint",
     "test": "nx run-many -t test",
     "typecheck": "nx run-many -t typecheck",
     "build": "nx run-many -t build",
+    "affected:lint": "nx affected -t lint",
+    "affected:typecheck": "nx affected -t typecheck",
+    "affected:test": "nx affected -t test",
+    "affected:build": "nx affected -t build",
+    "affected:check": "nx affected -t lint,typecheck,test,build",
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "cm": "cz",
     "graph": "nx graph",
-    "infra:up": "docker compose up -d",
-    "infra:down": "docker compose down",
-    "infra:logs": "docker compose logs -f"
+    "infra:up": "docker compose --env-file .env.local up -d --wait",
+    "infra:down": "docker compose --env-file .env.local down",
+    "infra:logs": "docker compose --env-file .env.local logs -f"
   },
   "config": {
     "commitizen": {

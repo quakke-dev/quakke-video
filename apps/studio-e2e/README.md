@@ -4,5 +4,5 @@ Playwright e2e-тесты сценариев автора в `studio`: загр�
 аналитика. Тестовые данные должны создаваться изолированно и очищаться.
 
 ```bash
-pnpm nx e2e studio-e2e
+pnpm nx e2e studio-e2e --project=chromium
 ```

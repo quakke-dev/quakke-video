@@ -1,0 +1,53 @@
+name: quakke-video-edge
+
+services:
+  nginx:
+    image: nginx:1.28-alpine
+    environment:
+      NGINX_ENVSUBST_FILTER: '(_DOMAIN|TLS_CERTIFICATE_NAME)$'
+      PROD_WEB_DOMAIN: ${PROD_WEB_DOMAIN:?PROD_WEB_DOMAIN is required}
+      PROD_STUDIO_DOMAIN: ${PROD_STUDIO_DOMAIN:?PROD_STUDIO_DOMAIN is required}
+      PROD_ADMIN_DOMAIN: ${PROD_ADMIN_DOMAIN:?PROD_ADMIN_DOMAIN is required}
+      PROD_API_DOMAIN: ${PROD_API_DOMAIN:?PROD_API_DOMAIN is required}
+      PROD_RABBIT_DOMAIN: ${PROD_RABBIT_DOMAIN:?PROD_RABBIT_DOMAIN is required}
+      STAGE_WEB_DOMAIN: ${STAGE_WEB_DOMAIN:?STAGE_WEB_DOMAIN is required}
+      STAGE_STUDIO_DOMAIN: ${STAGE_STUDIO_DOMAIN:?STAGE_STUDIO_DOMAIN is required}
+      STAGE_ADMIN_DOMAIN: ${STAGE_ADMIN_DOMAIN:?STAGE_ADMIN_DOMAIN is required}
+      STAGE_API_DOMAIN: ${STAGE_API_DOMAIN:?STAGE_API_DOMAIN is required}
+      STAGE_RABBIT_DOMAIN: ${STAGE_RABBIT_DOMAIN:?STAGE_RABBIT_DOMAIN is required}
+      TLS_CERTIFICATE_NAME: ${TLS_CERTIFICATE_NAME:?TLS_CERTIFICATE_NAME is required}
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ../nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - ${TLS_ROOT:-/etc/letsencrypt}:/etc/letsencrypt:ro
+      - ${ACME_WEBROOT:-/var/www/certbot}:/var/www/certbot:ro
+      - ${EDGE_AUTH_DIR:-/opt/quakke-video/edge/auth}:/etc/nginx/auth:ro
+    mem_limit: ${NGINX_MEMORY_LIMIT:-128m}
+    cpus: ${NGINX_CPU_LIMIT:-0.5}
+    pids_limit: 128
+    healthcheck:
+      test: ['CMD', 'nginx', '-t']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: '3'
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - production
+      - stage
+
+networks:
+  production:
+    external: true
+    name: quakke-video-production-edge
+  stage:
+    external: true
+    name: quakke-video-stage-edge

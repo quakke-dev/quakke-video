@@ -1,12 +1,16 @@
 # @quakke/config
 
-Общие utilities для чтения и строгой runtime-валидации конфигурации. Здесь будут
-Zod-схемы и небольшие factories, которые можно использовать в API и workers.
+Общие utilities для строгой runtime-валидации конфигурации API и workers. Здесь
+размещаются Zod schemas и небольшие config factories.
 
-Пакет не хранит секреты, не читает env при импорте модуля и не содержит
-environment-specific значений.
+Пакет не хранит secrets, не содержит environment-specific значений и не должен читать
+`process.env` как побочный эффект импорта.
+
+Сейчас пакет является пустым foundation skeleton.
 
 ```bash
+pnpm nx lint config
+pnpm nx typecheck config
 pnpm nx test config
 pnpm nx build config
 ```

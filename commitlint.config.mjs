@@ -129,7 +129,7 @@ export default {
           description: 'UI kit',
         },
         'api-client': {
-          description: 'Frontend API clinet',
+          description: 'Frontend API client',
         },
         contracts: {
           description: 'Общие типы, DTO, event contracts',
@@ -152,7 +152,7 @@ export default {
         ci: {
           description: 'CI/CD и git hooks',
         },
-      }
+      },
     },
   },
-}
+};

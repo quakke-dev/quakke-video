@@ -10,8 +10,6 @@ import {
 export default defineConfig(
   ignores,
   ...nx.configs['flat/base'],
-  ...nx.configs['flat/typescript'],
-  ...nx.configs['flat/javascript'],
   baseConfig,
   configFilesConfig,
   testConfig,

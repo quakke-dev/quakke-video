@@ -4,7 +4,7 @@
   "projectType": "application",
   "sourceRoot": "apps/admin-e2e/src",
   "tags": [],
-  "implicitDependencies": ["admin"],
+  "implicitDependencies": ["admin", "api"],
   "// targets": "to see all targets run: nx show project admin-e2e --web",
   "targets": {}
 }

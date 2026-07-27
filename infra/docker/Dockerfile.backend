@@ -1,0 +1,46 @@
+# syntax=docker/dockerfile:1.7
+
+FROM node:24.18.0-alpine3.23 AS builder
+
+ENV HUSKY=0 \
+    NX_DAEMON=false
+
+WORKDIR /workspace
+
+RUN corepack enable && corepack prepare pnpm@10.22.0 --activate
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm fetch --frozen-lockfile
+
+COPY . .
+RUN pnpm install --offline --frozen-lockfile
+
+ARG PROJECT
+RUN pnpm nx build "${PROJECT}" --configuration=production
+
+FROM node:24.18.0-alpine3.23 AS runtime
+
+ENV NODE_ENV=production
+
+WORKDIR /app
+
+RUN addgroup --system --gid 1001 nodejs \
+    && adduser --system --uid 1001 --ingroup nodejs app
+
+FROM runtime AS api
+COPY --from=builder --chown=app:nodejs /workspace/apps/api/dist/main.js ./main.js
+USER app
+EXPOSE 3000
+CMD ["node", "main.js"]
+
+FROM runtime AS worker-notifications
+COPY --from=builder --chown=app:nodejs /workspace/apps/worker-notifications/dist/main.js ./main.js
+USER app
+CMD ["node", "main.js"]
+
+FROM runtime AS worker-media
+USER root
+RUN apk add --no-cache ffmpeg
+COPY --from=builder --chown=app:nodejs /workspace/apps/worker-media/dist/main.js ./main.js
+USER app
+CMD ["node", "main.js"]

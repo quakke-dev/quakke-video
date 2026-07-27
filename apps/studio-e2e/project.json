@@ -4,7 +4,7 @@
   "projectType": "application",
   "sourceRoot": "apps/studio-e2e/src",
   "tags": [],
-  "implicitDependencies": ["studio"],
+  "implicitDependencies": ["studio", "api"],
   "// targets": "to see all targets run: nx show project studio-e2e --web",
   "targets": {}
 }

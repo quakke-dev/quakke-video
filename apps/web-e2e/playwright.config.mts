@@ -2,8 +2,15 @@ import { defineConfig, devices } from '@playwright/test';
 import { nxE2EPreset } from '@nx/playwright/preset';
 import { workspaceRoot } from '@nx/devkit';
 
-// For CI, you may want to set BASE_URL to the deployed application.
-const baseURL = process.env['BASE_URL'] || 'http://localhost:3000';
+const deployedBaseURL = process.env['WEB_BASE_URL'] ?? process.env['BASE_URL'];
+const baseURL = deployedBaseURL ?? 'http://localhost:3000';
+const httpCredentials =
+  process.env['E2E_BASIC_AUTH_USERNAME'] && process.env['E2E_BASIC_AUTH_PASSWORD']
+    ? {
+        username: process.env['E2E_BASIC_AUTH_USERNAME'],
+        password: process.env['E2E_BASIC_AUTH_PASSWORD'],
+      }
+    : undefined;
 
 /**
  * Read environment variables from file.
@@ -26,16 +33,19 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     baseURL,
+    httpCredentials,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'pnpm exec nx run web:dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: true,
-    cwd: workspaceRoot,
-  },
+  webServer: deployedBaseURL
+    ? undefined
+    : {
+        command: 'pnpm exec nx run web:dev',
+        url: 'http://localhost:3000',
+        reuseExistingServer: true,
+        cwd: workspaceRoot,
+      },
   projects: [
     {
       name: 'chromium',

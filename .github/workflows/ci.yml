@@ -1,34 +1,244 @@
-name: CI
+name: Pipeline
 
 on:
   pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      force_all:
+        description: Build and deploy every application image
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  group: pipeline-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  IMAGE_REGISTRY: ghcr.io
+  IMAGE_NAMESPACE: ${{ github.repository_owner }}
+  NX_DAEMON: 'false'
 
 jobs:
-  quality:
+  changes:
+    if: >-
+      github.event_name != 'pull_request' ||
+      (
+        github.event.pull_request.draft == false &&
+        github.event.pull_request.head.repo.full_name == github.repository
+      )
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
+    outputs:
+      base: ${{ steps.affected.outputs.base }}
+      head: ${{ steps.affected.outputs.head }}
+      image_matrix: ${{ steps.affected.outputs.image_matrix }}
+      image_services: ${{ steps.affected.outputs.image_services }}
+      has_images: ${{ steps.affected.outputs.has_images }}
+      deploy_needed: ${{ steps.affected.outputs.deploy_needed }}
+      e2e_projects: ${{ steps.affected.outputs.e2e_projects }}
+      backend_e2e_projects: ${{ steps.affected.outputs.backend_e2e_projects }}
+      has_e2e: ${{ steps.affected.outputs.has_e2e }}
+      infra_changed: ${{ steps.affected.outputs.infra_changed }}
+      edge_changed: ${{ steps.affected.outputs.edge_changed }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 20.19.0
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Calculate affected projects
+        id: affected
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          FORCE_ALL: ${{ inputs.force_all || 'false' }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PUSH_BASE_SHA: ${{ github.event.before }}
+          PUSH_HEAD_SHA: ${{ github.sha }}
+        run: |
+          set -eu
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base="$PR_BASE_SHA"
+            head="$PR_HEAD_SHA"
+          else
+            base="$PUSH_BASE_SHA"
+            head="$PUSH_HEAD_SHA"
+          fi
+
+          case "$base" in
+            '' | 0000000000000000000000000000000000000000)
+              base=$(git rev-list --max-parents=0 "$head")
+              ;;
+          esac
+
+          changed_files=$(git diff --name-only "$base" "$head")
+          root_changed=false
+          runtime_deployment_changed=false
+          edge_changed=false
+          infra_changed=false
+
+          if printf '%s\n' "$changed_files" | grep -Eq '^[^/]+$'; then
+            root_changed=true
+          fi
+
+          if printf '%s\n' "$changed_files" |
+            grep -Eq '^(infra/|docker-compose\.yml$|\.dockerignore$)'; then
+            infra_changed=true
+          fi
+
+          if printf '%s\n' "$changed_files" |
+            grep -Eq '^(infra/(env|scripts)/|infra/compose/compose\.deploy\.yml$)'; then
+            runtime_deployment_changed=true
+          fi
+
+          if printf '%s\n' "$changed_files" |
+            grep -Eq '^(infra/nginx/|infra/compose/compose\.edge\.yml$)'; then
+            edge_changed=true
+          fi
+
+          affected_projects=$(pnpm nx show projects \
+            --affected \
+            --base="$base" \
+            --head="$head" \
+            --json)
+
+          if [ "$FORCE_ALL" = "true" ] ||
+            [ "$root_changed" = "true" ] ||
+            printf '%s\n' "$changed_files" | grep -Eq '^infra/docker/'; then
+            affected_projects='["web","studio","admin","api","worker-media","worker-notifications","web-e2e","studio-e2e","admin-e2e","api-e2e","worker-media-e2e","worker-notifications-e2e"]'
+          fi
+
+          image_matrix=$(printf '%s' "$affected_projects" | jq -c '
+            [
+              .[] |
+              select(
+                . == "web" or
+                . == "studio" or
+                . == "admin" or
+                . == "api" or
+                . == "worker-media" or
+                . == "worker-notifications"
+              ) |
+              if . == "web" or . == "studio" or . == "admin" then
+                {
+                  image: .,
+                  project: .,
+                  target: .,
+                  dockerfile: "infra/docker/Dockerfile.frontend"
+                }
+              else
+                {
+                  image: .,
+                  project: .,
+                  target: .,
+                  dockerfile: "infra/docker/Dockerfile.backend"
+                }
+              end
+            ]
+          ')
+
+          image_services=$(printf '%s' "$image_matrix" |
+            jq -r '[.[].image] | join(",")')
+          e2e_projects=$(printf '%s' "$affected_projects" |
+            jq -r '[
+              .[] |
+              select(
+                . == "web-e2e" or
+                . == "studio-e2e" or
+                . == "admin-e2e"
+              )
+            ] | join(",")')
+          backend_e2e_projects=$(printf '%s' "$affected_projects" |
+            jq -r '[
+              .[] |
+              select(
+                . == "api-e2e" or
+                . == "worker-media-e2e" or
+                . == "worker-notifications-e2e"
+              )
+            ] | join(",")')
+
+          if [ "$(printf '%s' "$image_matrix" | jq length)" -gt 0 ]; then
+            has_images=true
+          else
+            has_images=false
+          fi
+
+          if [ -n "$e2e_projects" ] || [ -n "$backend_e2e_projects" ]; then
+            has_e2e=true
+          else
+            has_e2e=false
+          fi
+
+          if [ "$has_images" = "true" ] ||
+            [ "$runtime_deployment_changed" = "true" ] ||
+            { [ "$EVENT_NAME" != "pull_request" ] && [ "$edge_changed" = "true" ]; }; then
+            deploy_needed=true
+          else
+            deploy_needed=false
+          fi
+
+          {
+            printf 'base=%s\n' "$base"
+            printf 'head=%s\n' "$head"
+            printf 'image_matrix=%s\n' "$image_matrix"
+            printf 'image_services=%s\n' "$image_services"
+            printf 'has_images=%s\n' "$has_images"
+            printf 'deploy_needed=%s\n' "$deploy_needed"
+            printf 'e2e_projects=%s\n' "$e2e_projects"
+            printf 'backend_e2e_projects=%s\n' "$backend_e2e_projects"
+            printf 'has_e2e=%s\n' "$has_e2e"
+            printf 'infra_changed=%s\n' "$infra_changed"
+            printf 'edge_changed=%s\n' "$edge_changed"
+          } >>"$GITHUB_OUTPUT"
+
+  quality:
+    needs:
+      - changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
           cache: pnpm
 
       - name: Install dependencies
@@ -37,17 +247,372 @@ jobs:
       - name: Check project references
         run: pnpm nx sync:check
 
-      - name: Check formatting
-        run: pnpm format:check
+      - name: Validate affected infrastructure
+        if: needs.changes.outputs.infra_changed == 'true'
+        run: |
+          set -eu
 
-      - name: Lint
-        run: pnpm lint
+          docker compose \
+            --env-file infra/env/stage.env.example \
+            --env-file infra/env/release.env.example \
+            -f infra/compose/compose.deploy.yml \
+            config --quiet
+          docker compose \
+            --env-file infra/env/production.env.example \
+            --env-file infra/env/release.env.example \
+            -f infra/compose/compose.deploy.yml \
+            config --quiet
+          docker compose \
+            --env-file infra/env/edge.env.example \
+            -f infra/compose/compose.edge.yml \
+            config --quiet
 
-      - name: Typecheck
-        run: pnpm typecheck
+          for script in infra/scripts/*.sh; do
+            sh -n "$script"
+          done
 
-      - name: Test
-        run: pnpm test
+      - name: Check affected formatting
+        run: >-
+          pnpm nx format:check
+          --base="${{ needs.changes.outputs.base }}"
+          --head="${{ needs.changes.outputs.head }}"
 
-      - name: Build
-        run: pnpm build
+      - name: Check affected projects
+        run: >-
+          pnpm nx affected
+          -t lint,typecheck,test,build
+          --base="${{ needs.changes.outputs.base }}"
+          --head="${{ needs.changes.outputs.head }}"
+          --parallel=3
+
+  dependency-review:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Review dependency changes
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+
+  integration:
+    needs:
+      - changes
+      - quality
+    if: needs.changes.outputs.has_e2e == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout tested revision
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.changes.outputs.head }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        if: needs.changes.outputs.e2e_projects != ''
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run affected backend e2e
+        if: needs.changes.outputs.backend_e2e_projects != ''
+        run: >-
+          pnpm nx run-many
+          -t e2e
+          --projects="${{ needs.changes.outputs.backend_e2e_projects }}"
+          --parallel=1
+
+      - name: Run affected frontend e2e
+        if: needs.changes.outputs.e2e_projects != ''
+        run: >-
+          pnpm nx run-many
+          -t e2e
+          --projects="${{ needs.changes.outputs.e2e_projects }}"
+          --parallel=1
+          --
+          --project=chromium
+
+  images:
+    needs:
+      - changes
+      - quality
+      - dependency-review
+      - integration
+    if: >-
+      always() &&
+      needs.quality.result == 'success' &&
+      (needs.dependency-review.result == 'success' || needs.dependency-review.result == 'skipped') &&
+      (needs.integration.result == 'success' || needs.integration.result == 'skipped') &&
+      needs.changes.outputs.has_images == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    strategy:
+      fail-fast: true
+      matrix:
+        include: ${{ fromJSON(needs.changes.outputs.image_matrix) }}
+
+    steps:
+      - name: Checkout tested revision
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.changes.outputs.head }}
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.IMAGE_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build and push image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          target: ${{ matrix.target }}
+          build-args: |
+            PROJECT=${{ matrix.project }}
+          tags: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/quakke-video-${{ matrix.image }}:${{ needs.changes.outputs.head }}
+          cache-from: type=gha,scope=${{ matrix.image }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.image }}
+          provenance: mode=max
+          sbom: true
+          push: true
+
+      - name: Scan image
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/quakke-video-${{ matrix.image }}:${{ needs.changes.outputs.head }}
+          format: table
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+          exit-code: '1'
+
+  deploy:
+    needs:
+      - changes
+      - quality
+      - dependency-review
+      - integration
+      - images
+    if: >-
+      always() &&
+      needs.quality.result == 'success' &&
+      (needs.dependency-review.result == 'success' || needs.dependency-review.result == 'skipped') &&
+      (needs.integration.result == 'success' || needs.integration.result == 'skipped') &&
+      (needs.images.result == 'success' || needs.images.result == 'skipped') &&
+      needs.changes.outputs.deploy_needed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    concurrency:
+      group: deploy-${{ github.event_name == 'pull_request' && 'stage' || 'production' }}
+      cancel-in-progress: false
+    environment:
+      name: ${{ github.event_name == 'pull_request' && 'stage' || 'production' }}
+      url: ${{ vars.PUBLIC_URL }}
+
+    steps:
+      - name: Checkout deployment files
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.changes.outputs.head }}
+
+      - name: Reject superseded release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_SHA: ${{ needs.changes.outputs.head }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -eu
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            current_state=$(gh api \
+              "repos/${{ github.repository }}/pulls/$PR_NUMBER" \
+              --jq '"\(.state) \(.head.sha)"')
+            [ "$current_state" = "open $EXPECTED_SHA" ]
+          else
+            current_sha=$(gh api \
+              "repos/${{ github.repository }}/commits/main" \
+              --jq '.sha')
+            [ "$current_sha" = "$EXPECTED_SHA" ]
+          fi
+
+      - name: Validate deployment configuration
+        env:
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+          DEPLOY_PORT: ${{ vars.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+        run: |
+          set -eu
+
+          case "$DEPLOY_HOST" in
+            *[!a-zA-Z0-9.-]* | '') exit 1 ;;
+          esac
+          case "$DEPLOY_USER" in
+            *[!a-zA-Z0-9_-]* | '') exit 1 ;;
+          esac
+          case "$DEPLOY_PORT" in
+            *[!0-9]* | '') exit 1 ;;
+          esac
+          case "$DEPLOY_PATH" in
+            /opt/* | /srv/*) ;;
+            *) exit 1 ;;
+          esac
+
+      - name: Prepare SSH and deployment bundle
+        env:
+          DEPLOY_ENV_FILE: ${{ secrets.DEPLOY_ENV_FILE }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+        run: |
+          set -eu
+          umask 077
+
+          install -d -m 700 "$HOME/.ssh" deployment
+          printf '%s\n' "$DEPLOY_SSH_PRIVATE_KEY" >"$HOME/.ssh/id_ed25519"
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" >"$HOME/.ssh/known_hosts"
+
+          cp -R infra/compose deployment/
+          cp -R infra/nginx deployment/
+          cp -R infra/scripts deployment/
+          printf '%s\n' "$DEPLOY_ENV_FILE" >deployment/.env
+          chmod 700 deployment/scripts/*.sh
+          tar -czf deployment.tar.gz -C deployment .
+
+      - name: Upload deployment bundle
+        env:
+          DEPLOY_ARCHIVE: /tmp/quakke-video-${{ github.event_name == 'pull_request' && 'stage' || 'production' }}-${{ needs.changes.outputs.head }}.tar.gz
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ vars.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+        run: |
+          set -eu
+          scp -P "$DEPLOY_PORT" \
+            deployment.tar.gz \
+            "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_ARCHIVE"
+
+      - name: Deploy immutable release
+        env:
+          AFFECTED_SERVICES: ${{ needs.changes.outputs.image_services }}
+          DEPLOY_ARCHIVE: /tmp/quakke-video-${{ github.event_name == 'pull_request' && 'stage' || 'production' }}-${{ needs.changes.outputs.head }}.tar.gz
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+          DEPLOY_PORT: ${{ vars.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+          RELEASE_SHA: ${{ needs.changes.outputs.head }}
+        run: |
+          set -eu
+
+          ssh -p "$DEPLOY_PORT" "$DEPLOY_USER@$DEPLOY_HOST" \
+            "set -eu
+             install -d -m 700 '$DEPLOY_PATH'
+             tar -xzf '$DEPLOY_ARCHIVE' -C '$DEPLOY_PATH'
+             rm '$DEPLOY_ARCHIVE'
+             chmod 700 '$DEPLOY_PATH/scripts/'*.sh
+             '$DEPLOY_PATH/scripts/deploy.sh' '$RELEASE_SHA' '$AFFECTED_SERVICES'"
+
+      - name: Deploy shared edge
+        if: github.event_name != 'pull_request' && needs.changes.outputs.edge_changed == 'true'
+        env:
+          DEPLOY_EDGE_PATH: ${{ vars.DEPLOY_EDGE_PATH }}
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+          DEPLOY_PORT: ${{ vars.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+        run: |
+          set -eu
+
+          case "$DEPLOY_EDGE_PATH" in
+            /opt/* | /srv/*) ;;
+            *) exit 1 ;;
+          esac
+
+          ssh -p "$DEPLOY_PORT" "$DEPLOY_USER@$DEPLOY_HOST" \
+            "'$DEPLOY_PATH/scripts/deploy-edge.sh' '$DEPLOY_EDGE_PATH'"
+
+      - name: Smoke test
+        env:
+          API_URL: ${{ vars.API_URL }}
+          BASIC_AUTH_PASSWORD: ${{ secrets.E2E_BASIC_AUTH_PASSWORD }}
+          BASIC_AUTH_USERNAME: ${{ secrets.E2E_BASIC_AUTH_USERNAME }}
+          WEB_URL: ${{ vars.PUBLIC_URL }}
+        run: |
+          set -eu
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            curl --fail --silent --show-error --retry 5 --retry-all-errors \
+              --user "$BASIC_AUTH_USERNAME:$BASIC_AUTH_PASSWORD" \
+              "$WEB_URL/" >/dev/null
+            curl --fail --silent --show-error --retry 5 --retry-all-errors \
+              --user "$BASIC_AUTH_USERNAME:$BASIC_AUTH_PASSWORD" \
+              "$API_URL/api/health/live" >/dev/null
+          else
+            curl --fail --silent --show-error --retry 5 --retry-all-errors \
+              "$WEB_URL/" >/dev/null
+            curl --fail --silent --show-error --retry 5 --retry-all-errors \
+              "$API_URL/api/health/live" >/dev/null
+          fi
+
+      - name: Install pnpm
+        if: github.event_name == 'pull_request' && needs.changes.outputs.e2e_projects != ''
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node.js
+        if: github.event_name == 'pull_request' && needs.changes.outputs.e2e_projects != ''
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        if: github.event_name == 'pull_request' && needs.changes.outputs.e2e_projects != ''
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        if: github.event_name == 'pull_request' && needs.changes.outputs.e2e_projects != ''
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run affected stage e2e
+        if: github.event_name == 'pull_request' && needs.changes.outputs.e2e_projects != ''
+        env:
+          ADMIN_BASE_URL: https://admin.quakke-video-stage.tech
+          E2E_BASIC_AUTH_PASSWORD: ${{ secrets.E2E_BASIC_AUTH_PASSWORD }}
+          E2E_BASIC_AUTH_USERNAME: ${{ secrets.E2E_BASIC_AUTH_USERNAME }}
+          STUDIO_BASE_URL: https://studio.quakke-video-stage.tech
+          WEB_BASE_URL: https://quakke-video-stage.tech
+        run: >-
+          pnpm nx run-many
+          -t e2e
+          --projects="${{ needs.changes.outputs.e2e_projects }}"
+          --parallel=1
+          --
+          --project=chromium

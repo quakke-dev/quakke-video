@@ -5,3 +5,8 @@ Next.js, NestJS и test-настройки без workspace-specific dependency 
 
 Nx tags и правила связей остаются в корневом `eslint.config.mjs`. Это позволит позже
 публиковать общий config без привязки к структуре одного репозитория.
+
+```bash
+pnpm nx lint @quakke/eslint-config
+pnpm nx typecheck @quakke/eslint-config
+```

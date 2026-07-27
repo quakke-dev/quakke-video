@@ -1,13 +1,22 @@
 # api
 
-Основное NestJS приложение и владелец бизнес-логики. Планируемые входы: GraphQL для
-бизнес-данных, REST для resumable upload, healthcheck и технических endpoint.
+Основное NestJS приложение и владелец продуктовой бизнес-логики.
 
-Модули должны иметь явные границы и не обращаться к worker-приложениям напрямую.
-Тяжелая работа публикуется в RabbitMQ.
+Целевые входы:
+
+- GraphQL для пользовательских и административных бизнес-данных;
+- REST для resumable upload, healthcheck и технических endpoint.
+
+Бизнес-модули должны иметь явные границы. API не вызывает workers напрямую, а
+публикует versioned commands в RabbitMQ. Тяжёлая обработка и provider-specific код
+сюда не помещаются.
+
+Сейчас реализован только `GET /api/health/live`.
 
 ```bash
-pnpm nx serve api
+PORT=3333 pnpm nx serve api
+pnpm nx lint api
+pnpm nx typecheck api
 pnpm nx test api
 pnpm nx build api
 ```

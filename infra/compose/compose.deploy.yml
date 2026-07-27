@@ -1,0 +1,258 @@
+name: quakke-video-${APP_ENV:?APP_ENV is required}
+
+x-app-environment: &app-environment
+  APP_ENV: ${APP_ENV:?APP_ENV is required}
+  LOG_LEVEL: ${LOG_LEVEL:-info}
+  DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required}
+  REDIS_URL: ${REDIS_URL:?REDIS_URL is required}
+  RABBITMQ_URL: ${RABBITMQ_URL:?RABBITMQ_URL is required}
+  S3_ENDPOINT: ${S3_ENDPOINT:?S3_ENDPOINT is required}
+  S3_REGION: ${S3_REGION:?S3_REGION is required}
+  S3_ACCESS_KEY: ${S3_ACCESS_KEY:?S3_ACCESS_KEY is required}
+  S3_SECRET_KEY: ${S3_SECRET_KEY:?S3_SECRET_KEY is required}
+  S3_BUCKET_MEDIA: ${S3_BUCKET_MEDIA:?S3_BUCKET_MEDIA is required}
+
+x-runtime-defaults: &runtime-defaults
+  init: true
+  restart: unless-stopped
+  pids_limit: 256
+  logging: &default-logging
+    driver: json-file
+    options:
+      max-size: 10m
+      max-file: '3'
+  security_opt:
+    - no-new-privileges:true
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB is required}
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is required}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    shm_size: 64m
+    mem_limit: ${POSTGRES_MEMORY_LIMIT:-384m}
+    cpus: ${POSTGRES_CPU_LIMIT:-0.75}
+    pids_limit: 128
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+    logging: *default-logging
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - data
+
+  redis:
+    image: redis:7.4-alpine
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?REDIS_PASSWORD is required}
+    command:
+      - redis-server
+      - --appendonly
+      - 'yes'
+      - --maxmemory
+      - ${REDIS_MAXMEMORY:-96mb}
+      - --maxmemory-policy
+      - allkeys-lru
+      - --requirepass
+      - ${REDIS_PASSWORD:?REDIS_PASSWORD is required}
+    volumes:
+      - redis-data:/data
+    mem_limit: ${REDIS_MEMORY_LIMIT:-128m}
+    cpus: ${REDIS_CPU_LIMIT:-0.35}
+    pids_limit: 64
+    healthcheck:
+      test: ['CMD-SHELL', 'redis-cli -a "$$REDIS_PASSWORD" ping | grep PONG']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    logging: *default-logging
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - data
+
+  rabbitmq:
+    image: rabbitmq:4.2-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:?RABBITMQ_USER is required}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:?RABBITMQ_PASSWORD is required}
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: ${RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS:--rabbit vm_memory_high_watermark 0.55}
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    mem_limit: ${RABBITMQ_MEMORY_LIMIT:-384m}
+    cpus: ${RABBITMQ_CPU_LIMIT:-0.5}
+    pids_limit: 256
+    healthcheck:
+      test: ['CMD', 'rabbitmq-diagnostics', '-q', 'ping']
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+    restart: unless-stopped
+    logging: *default-logging
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      data:
+      edge:
+        aliases:
+          - ${APP_ENV}-rabbitmq
+
+  api:
+    <<: *runtime-defaults
+    image: ${IMAGE_REGISTRY:?IMAGE_REGISTRY is required}/${IMAGE_NAMESPACE:?IMAGE_NAMESPACE is required}/quakke-video-api:${API_IMAGE_TAG:?API_IMAGE_TAG is required}
+    environment:
+      <<: *app-environment
+      PORT: 3000
+      CORS_ORIGINS: ${CORS_ORIGINS:?CORS_ORIGINS is required}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?JWT_ACCESS_SECRET is required}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:?JWT_REFRESH_SECRET is required}
+      NODE_OPTIONS: --max-old-space-size=${API_NODE_HEAP_MB:-256}
+    mem_limit: ${API_MEMORY_LIMIT:-384m}
+    cpus: ${API_CPU_LIMIT:-0.75}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://127.0.0.1:3000/api/health/live']
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      data:
+      edge:
+        aliases:
+          - ${APP_ENV}-api
+
+  worker-media:
+    <<: *runtime-defaults
+    profiles: ['workers']
+    image: ${IMAGE_REGISTRY:?IMAGE_REGISTRY is required}/${IMAGE_NAMESPACE:?IMAGE_NAMESPACE is required}/quakke-video-worker-media:${WORKER_MEDIA_IMAGE_TAG:?WORKER_MEDIA_IMAGE_TAG is required}
+    environment:
+      <<: *app-environment
+      MEDIA_CONCURRENCY: ${MEDIA_CONCURRENCY:-1}
+      NODE_OPTIONS: --max-old-space-size=${WORKER_MEDIA_NODE_HEAP_MB:-256}
+    mem_limit: ${WORKER_MEDIA_MEMORY_LIMIT:-768m}
+    cpus: ${WORKER_MEDIA_CPU_LIMIT:-1.5}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    tmpfs:
+      - /tmp:size=${WORKER_MEDIA_TMPFS_SIZE:-512m},mode=1770
+    networks:
+      - data
+      - egress
+
+  worker-notifications:
+    <<: *runtime-defaults
+    profiles: ['workers']
+    image: ${IMAGE_REGISTRY:?IMAGE_REGISTRY is required}/${IMAGE_NAMESPACE:?IMAGE_NAMESPACE is required}/quakke-video-worker-notifications:${WORKER_NOTIFICATIONS_IMAGE_TAG:?WORKER_NOTIFICATIONS_IMAGE_TAG is required}
+    environment:
+      <<: *app-environment
+      SMTP_URL: ${SMTP_URL:-}
+      NODE_OPTIONS: --max-old-space-size=${WORKER_NOTIFICATIONS_NODE_HEAP_MB:-192}
+    mem_limit: ${WORKER_NOTIFICATIONS_MEMORY_LIMIT:-256m}
+    cpus: ${WORKER_NOTIFICATIONS_CPU_LIMIT:-0.5}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - data
+      - egress
+
+  web:
+    <<: *runtime-defaults
+    image: ${IMAGE_REGISTRY:?IMAGE_REGISTRY is required}/${IMAGE_NAMESPACE:?IMAGE_NAMESPACE is required}/quakke-video-web:${WEB_IMAGE_TAG:?WEB_IMAGE_TAG is required}
+    environment:
+      APP_ENV: ${APP_ENV:?APP_ENV is required}
+      NODE_OPTIONS: --max-old-space-size=${WEB_NODE_HEAP_MB:-192}
+    mem_limit: ${WEB_MEMORY_LIMIT:-256m}
+    cpus: ${WEB_CPU_LIMIT:-0.5}
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://127.0.0.1:3000/']
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      edge:
+        aliases:
+          - ${APP_ENV}-web
+
+  studio:
+    <<: *runtime-defaults
+    image: ${IMAGE_REGISTRY:?IMAGE_REGISTRY is required}/${IMAGE_NAMESPACE:?IMAGE_NAMESPACE is required}/quakke-video-studio:${STUDIO_IMAGE_TAG:?STUDIO_IMAGE_TAG is required}
+    environment:
+      APP_ENV: ${APP_ENV:?APP_ENV is required}
+      NODE_OPTIONS: --max-old-space-size=${STUDIO_NODE_HEAP_MB:-192}
+    mem_limit: ${STUDIO_MEMORY_LIMIT:-256m}
+    cpus: ${STUDIO_CPU_LIMIT:-0.5}
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://127.0.0.1:3000/']
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      edge:
+        aliases:
+          - ${APP_ENV}-studio
+
+  admin:
+    <<: *runtime-defaults
+    image: ${IMAGE_REGISTRY:?IMAGE_REGISTRY is required}/${IMAGE_NAMESPACE:?IMAGE_NAMESPACE is required}/quakke-video-admin:${ADMIN_IMAGE_TAG:?ADMIN_IMAGE_TAG is required}
+    environment:
+      APP_ENV: ${APP_ENV:?APP_ENV is required}
+      NODE_OPTIONS: --max-old-space-size=${ADMIN_NODE_HEAP_MB:-192}
+    mem_limit: ${ADMIN_MEMORY_LIMIT:-256m}
+    cpus: ${ADMIN_CPU_LIMIT:-0.5}
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://127.0.0.1:3000/']
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      edge:
+        aliases:
+          - ${APP_ENV}-admin
+
+networks:
+  edge:
+    name: quakke-video-${APP_ENV}-edge
+  data:
+    name: quakke-video-${APP_ENV}-data
+    internal: true
+  egress:
+    name: quakke-video-${APP_ENV}-egress
+
+volumes:
+  postgres-data:
+    name: quakke-video-${APP_ENV}-postgres
+  redis-data:
+    name: quakke-video-${APP_ENV}-redis
+  rabbitmq-data:
+    name: quakke-video-${APP_ENV}-rabbitmq

@@ -4,5 +4,5 @@ Playwright e2e-тесты административных сценариев и
 Критичные permission checks дополнительно тестируются на уровне API.
 
 ```bash
-pnpm nx e2e admin-e2e
+pnpm nx e2e admin-e2e --project=chromium
 ```
