@@ -8,8 +8,14 @@ if [ "$#" -ne 1 ]; then
 fi
 
 edge_root=$1
-script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
 deployment_root=$(dirname "$script_dir")
+compose_dir="$edge_root/compose"
+nginx_dir="$edge_root/nginx"
+compose_file="$compose_dir/compose.edge.yml"
+nginx_template="$nginx_dir/default.conf.template"
+previous_compose_file="$compose_dir/compose.edge.previous.yml"
+previous_nginx_template="$nginx_dir/default.conf.previous.template"
 
 if [ ! -f "$edge_root/.env" ]; then
   echo "Missing shared edge environment file: $edge_root/.env" >&2
@@ -22,20 +28,32 @@ if [ ! -f "$edge_root/auth/stage.htpasswd" ] ||
   exit 1
 fi
 
-install -d -m 700 "$edge_root/compose" "$edge_root/nginx"
+install -d -m 700 "$compose_dir" "$nginx_dir"
+
+if [ -f "$compose_file" ] && [ -f "$nginx_template" ]; then
+  cp "$compose_file" "$previous_compose_file"
+  cp "$nginx_template" "$previous_nginx_template"
+fi
+
 install -m 600 \
   "$deployment_root/compose/compose.edge.yml" \
-  "$edge_root/compose/compose.edge.yml"
+  "$compose_file"
 install -m 600 \
   "$deployment_root/nginx/default.conf.template" \
-  "$edge_root/nginx/default.conf.template"
+  "$nginx_template"
 
-docker compose \
+if ! docker compose \
   --env-file "$edge_root/.env" \
-  -f "$edge_root/compose/compose.edge.yml" \
-  config --quiet
+  -f "$compose_file" \
+  config --quiet ||
+  ! docker compose \
+    --env-file "$edge_root/.env" \
+    -f "$compose_file" \
+    up -d --remove-orphans --wait; then
+  if [ -f "$previous_compose_file" ] &&
+    [ -f "$previous_nginx_template" ]; then
+    "$script_dir/rollback-edge.sh" "$edge_root" || true
+  fi
 
-docker compose \
-  --env-file "$edge_root/.env" \
-  -f "$edge_root/compose/compose.edge.yml" \
-  up -d --remove-orphans --wait
+  exit 1
+fi

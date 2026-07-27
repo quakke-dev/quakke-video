@@ -1,0 +1,99 @@
+name: Rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment to roll back
+        required: true
+        type: choice
+        options:
+          - stage
+          - production
+        default: stage
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-${{ inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  rollback:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: ${{ inputs.environment }}
+      url: ${{ vars.PUBLIC_URL }}
+
+    steps:
+      - name: Validate rollback configuration
+        env:
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+          DEPLOY_PORT: ${{ vars.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+        run: |
+          set -eu
+
+          case "$DEPLOY_HOST" in
+            *[!a-zA-Z0-9.-]* | '') exit 1 ;;
+          esac
+          case "$DEPLOY_USER" in
+            *[!a-zA-Z0-9_-]* | '') exit 1 ;;
+          esac
+          case "$DEPLOY_PORT" in
+            *[!0-9]* | '') exit 1 ;;
+          esac
+          case "$DEPLOY_PATH" in
+            /opt/* | /srv/*) ;;
+            *) exit 1 ;;
+          esac
+
+      - name: Prepare SSH
+        env:
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+        run: |
+          set -eu
+          umask 077
+
+          install -d -m 700 "$HOME/.ssh"
+          printf '%s\n' "$DEPLOY_SSH_PRIVATE_KEY" >"$HOME/.ssh/id_ed25519"
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" >"$HOME/.ssh/known_hosts"
+
+      - name: Roll back to previous release
+        env:
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+          DEPLOY_PORT: ${{ vars.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+        run: >-
+          ssh -p "$DEPLOY_PORT" "$DEPLOY_USER@$DEPLOY_HOST"
+          "'$DEPLOY_PATH/scripts/rollback.sh'"
+
+      - name: Smoke test
+        env:
+          API_URL: ${{ vars.API_URL }}
+          BASIC_AUTH_PASSWORD: ${{ secrets.E2E_BASIC_AUTH_PASSWORD }}
+          BASIC_AUTH_USERNAME: ${{ secrets.E2E_BASIC_AUTH_USERNAME }}
+          DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
+          WEB_URL: ${{ vars.PUBLIC_URL }}
+        run: |
+          set -eu
+
+          if [ "$DEPLOY_ENVIRONMENT" = "stage" ]; then
+            curl --fail --silent --show-error --retry 5 --retry-all-errors \
+              --user "$BASIC_AUTH_USERNAME:$BASIC_AUTH_PASSWORD" \
+              "$WEB_URL/" >/dev/null
+            curl --fail --silent --show-error --retry 5 --retry-all-errors \
+              --user "$BASIC_AUTH_USERNAME:$BASIC_AUTH_PASSWORD" \
+              "$API_URL/api/health/live" >/dev/null
+          else
+            curl --fail --silent --show-error --retry 5 --retry-all-errors \
+              "$WEB_URL/" >/dev/null
+            curl --fail --silent --show-error --retry 5 --retry-all-errors \
+              "$API_URL/api/health/live" >/dev/null
+          fi

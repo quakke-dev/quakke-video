@@ -52,6 +52,22 @@ pnpm nx affected -t lint,typecheck,test,build --base=<base> --head=<head>
 Root globals также перечислены в `nx.json.sharedGlobals`, поэтому они входят в hashes
 всех cacheable tasks.
 
+## Полный release candidate
+
+Affected вычисления определяют, какие приложения действительно нужно пересобрать.
+При наличии хотя бы одного affected application pipeline при этом создаёт полный набор
+из шести image tags для release SHA:
+
+- affected applications собираются из исходного кода;
+- unchanged applications проходят повторный Trivy scan и получают новый SHA tag через
+  OCI manifest promotion из base commit;
+- если base image ещё не опубликован, конкретное приложение собирается как fallback;
+- deploy обновляет все шесть tags одним полным release manifest.
+
+Таким образом, последний production pipeline включает изменения из предыдущих merge,
+даже если промежуточные production deploy были пропущены. Stage candidate также не
+смешивается с ранее развёрнутым PR.
+
 ## Кеширование
 
 Nx local cache используется внутри job и локально у разработчика. `nx affected`
@@ -66,10 +82,12 @@ runner. Когда длительность pipeline станет заметно
 ## Этапы pipeline
 
 `changes`
-: Вычисляет base/head, affected projects, image matrix и affected e2e projects.
+: Проверяет workflow через pinned Actionlint, затем вычисляет base/head, affected
+projects, image matrix и affected e2e projects.
 
 `quality`
-: Выполняет `sync:check`, affected formatting, lint, typecheck, tests и builds.
+: Выполняет `sync:check`, проверяет Compose и POSIX scripts через pinned ShellCheck,
+затем запускает affected formatting, lint, typecheck, tests и builds.
 
 `dependency-review`
 : Блокирует PR при добавлении dependency с известной уязвимостью severity `high`.
@@ -79,12 +97,22 @@ runner. Когда длительность pipeline станет заметно
 выполняются в Chromium; после stage deploy они повторяются уже против stage URLs.
 
 `images`
-: Собирает только affected deployable applications, публикует их в GHCR, добавляет
-provenance/SBOM и запускает Trivy.
+: Собирает только affected deployable applications, сканирует images до публикации,
+продвигает unchanged images, публикует полный release candidate в GHCR и добавляет
+provenance/SBOM.
 
 `deploy`
 : Ожидает manual environment approval, проверяет, что candidate не устарел, доставляет
-manifest на VPS, проверяет health endpoints и запускает stage e2e.
+manifest на VPS, проверяет health endpoints и запускает stage e2e. Ошибка smoke test
+автоматически возвращает предыдущий application release и, если менялся shared edge,
+предыдущую Nginx-конфигурацию, после чего завершает pipeline с ошибкой. Ошибка stage
+e2e сохраняет запущенный candidate для диагностики и не вызывает автоматический
+rollback.
+
+Отдельный workflow `CodeQL` выполняет SAST для JavaScript/TypeScript на PR, push в
+`main`, вручную и по еженедельному расписанию. Все сторонние GitHub Actions закреплены
+на полных commit SHA; комментарий рядом сохраняет читаемую версию, а Dependabot
+обновляет ссылки.
 
 ## Ручной deploy из GitHub UI
 
@@ -95,16 +123,14 @@ manifest на VPS, проверяет health endpoints и запускает sta
 2. Нажмите `Run workflow`.
 3. Выберите Git branch или tag.
 4. Выберите `deploy_environment`: `stage` или `production`.
-5. Оставьте `force_all=true` для полного воспроизводимого deploy.
-6. Нажмите `Run workflow`.
-7. После успешных проверок откройте ожидающий job `deploy`, нажмите
+5. Нажмите `Run workflow`.
+6. После успешных проверок откройте ожидающий job `deploy`, нажмите
    `Review deployments` и подтвердите выбранное Environment.
 
 Для `production` workflow принимает только ветку `main`. Stage можно развернуть из
-выбранной task branch, чтобы проверить её до merge. `force_all=true` собирает все шесть
-application images; это безопасный default для первого и ручного deploy. При
-`force_all=false` рассчитываются только проекты, затронутые последним commit выбранной
-ветки.
+выбранной task branch, чтобы проверить её до merge. Ручной pipeline всегда собирает
+все шесть application images: вычисление только по последнему commit выбранной ветки
+не гарантирует полный candidate после нескольких локальных commits.
 
 `dependency-review` в ручном workflow пропускается, поскольку эта проверка работает
 только с dependency diff pull request. Quality, integration, image scanning, smoke
@@ -134,15 +160,17 @@ Rollback меняет manifest целиком, поэтому окружение
 
 Environment variables:
 
-| Variable           | Stage                                 | Production                     |
-| ------------------ | ------------------------------------- | ------------------------------ |
-| `PUBLIC_URL`       | `https://quakke-video-stage.tech`     | `https://quakke-video.ru`      |
-| `API_URL`          | `https://api.quakke-video-stage.tech` | `https://api.quakke-video.ru`  |
-| `DEPLOY_HOST`      | один IP/DNS VPS                       | тот же IP/DNS                  |
-| `DEPLOY_PORT`      | `22`                                  | `22`                           |
-| `DEPLOY_USER`      | `deploy`                              | `deploy`                       |
-| `DEPLOY_PATH`      | `/opt/quakke-video/stage`             | `/opt/quakke-video/production` |
-| `DEPLOY_EDGE_PATH` | не используется                       | `/opt/quakke-video/edge`       |
+| Variable           | Stage                                    | Production                       |
+| ------------------ | ---------------------------------------- | -------------------------------- |
+| `PUBLIC_URL`       | `https://quakke-video-stage.tech`        | `https://quakke-video.ru`        |
+| `STUDIO_URL`       | `https://studio.quakke-video-stage.tech` | `https://studio.quakke-video.ru` |
+| `ADMIN_URL`        | `https://admin.quakke-video-stage.tech`  | `https://admin.quakke-video.ru`  |
+| `API_URL`          | `https://api.quakke-video-stage.tech`    | `https://api.quakke-video.ru`    |
+| `DEPLOY_HOST`      | один IP/DNS VPS                          | тот же IP/DNS                    |
+| `DEPLOY_PORT`      | `22`                                     | `22`                             |
+| `DEPLOY_USER`      | `deploy`                                 | `deploy`                         |
+| `DEPLOY_PATH`      | `/opt/quakke-video/stage`                | `/opt/quakke-video/production`   |
+| `DEPLOY_EDGE_PATH` | не используется                          | `/opt/quakke-video/edge`         |
 
 Environment secrets:
 
@@ -157,10 +185,38 @@ Environment secrets:
 GHCR images должны быть переключены в public после первой публикации. Server не хранит
 GitHub PAT и скачивает public images анонимно.
 
+В `Settings -> Code security and analysis` включаются:
+
+- Dependency graph и Dependabot alerts;
+- Dependabot security updates;
+- secret scanning;
+- push protection для найденных secrets;
+- code scanning через добавленный CodeQL workflow.
+
+В `Settings -> Actions -> General` workflow permissions можно оставить
+`Read repository contents and packages permissions`: повышение до `packages: write` и
+`security-events: write` задано только конкретным jobs. Все application и
+infrastructure base images закреплены digest; Docker Dependabot обновляет tag и digest
+через отдельный PR.
+
 Первый deploy окружения должен содержать все шесть application images. Stage получает
 их из первого инфраструктурного PR, затрагивающего root/Docker context. Для первичного
-production deploy можно использовать `workflow_dispatch` с `force_all=true`.
+production deploy используется `workflow_dispatch`.
 
 Branch protection для `main` должна запрещать прямой push и требовать успешный
 `Pipeline / quality`, `Pipeline / dependency-review` и, когда job запущен,
-`Pipeline / integration`.
+`Pipeline / integration`. После первого успешного CodeQL run можно также сделать
+обязательным `CodeQL / analyze`.
+
+## Rollback из GitHub UI
+
+Workflow `.github/workflows/rollback.yml` запускается только вручную из ветки `main`.
+
+1. Откройте `GitHub -> Actions -> Rollback`.
+2. Нажмите `Run workflow` и оставьте branch `main`.
+3. Выберите `stage` или `production`.
+4. Подтвердите соответствующий GitHub Environment.
+
+Rollback сериализован с обычным deploy через общий concurrency group, переключает
+окружение на предыдущий полный manifest и выполняет smoke test. Повторный rollback
+переключает два последних manifest обратно.

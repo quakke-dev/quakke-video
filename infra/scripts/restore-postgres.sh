@@ -13,7 +13,7 @@ if [ "${CONFIRM_RESTORE:-no}" != "yes" ]; then
 fi
 
 backup_file=$1
-script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
 deploy_root=$(dirname "$script_dir")
 compose_file="$deploy_root/compose/compose.deploy.yml"
 environment_file="$deploy_root/.env"

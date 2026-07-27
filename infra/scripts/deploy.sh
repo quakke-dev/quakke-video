@@ -27,7 +27,7 @@ if ! validate_sha "$release_sha"; then
   exit 2
 fi
 
-script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
 deploy_root=$(dirname "$script_dir")
 compose_file="$deploy_root/compose/compose.deploy.yml"
 environment_file="$deploy_root/.env"
@@ -43,6 +43,7 @@ fi
 
 set -a
 # The file is generated from a protected GitHub Environment secret.
+# shellcheck source=/dev/null
 . "$environment_file"
 set +a
 
@@ -55,6 +56,7 @@ WORKER_NOTIFICATIONS_IMAGE_TAG=
 
 if [ -f "$release_file" ]; then
   # This file is generated exclusively by this script.
+  # shellcheck source=/dev/null
   . "$release_file"
 fi
 
@@ -141,6 +143,7 @@ rollback() {
 compose config --quiet
 
 if [ -n "$normalized_services" ]; then
+  # shellcheck disable=SC2086
   if ! compose pull $normalized_services; then
     rollback
     exit 1

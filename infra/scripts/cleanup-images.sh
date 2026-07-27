@@ -2,7 +2,7 @@
 
 set -eu
 
-script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
 deploy_root=$(dirname "$script_dir")
 environment_file="$deploy_root/.env"
 previous_release_file="$deploy_root/.release.previous.env"
@@ -13,12 +13,14 @@ if [ ! -f "$environment_file" ]; then
 fi
 
 set -a
+# shellcheck source=/dev/null
 . "$environment_file"
 set +a
 
 protect_previous_images() {
   [ -f "$previous_release_file" ] || return 0
 
+  # shellcheck source=/dev/null
   . "$previous_release_file"
 
   for image_spec in \

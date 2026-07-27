@@ -2,7 +2,7 @@
 
 set -eu
 
-script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
 deploy_root=$(dirname "$script_dir")
 compose_file="$deploy_root/compose/compose.deploy.yml"
 environment_file="$deploy_root/.env"
@@ -20,6 +20,7 @@ if [ ! -f "$environment_file" ] || [ ! -f "$release_file" ]; then
 fi
 
 set -a
+# shellcheck source=/dev/null
 . "$environment_file"
 set +a
 

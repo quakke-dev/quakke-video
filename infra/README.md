@@ -27,6 +27,10 @@
 - `nginx/` - маршрутизация production, stage и RabbitMQ Management.
 - `scripts/` - deploy, rollback, cleanup, backup и restore.
 
+Production base images используют читаемый tag и закреплённый multi-arch digest.
+Dependabot обновляет их через отдельные PR, поэтому одинаковый release не меняет
+runtime layers самопроизвольно.
+
 ## Локальная инфраструктура
 
 ```bash
@@ -137,14 +141,22 @@ WORKER_NOTIFICATIONS_IMAGE_TAG
 ```
 
 Поэтому изменение одного приложения не требует пересборки остальных. Перед обновлением
-manifest копируется в `.release.previous.env`. При неуспешном healthcheck deploy script
-автоматически возвращает предыдущий manifest.
+manifest копируется в `.release.previous.env`. При неуспешном Compose healthcheck или
+внешнем CI smoke test окружение автоматически возвращается на предыдущий manifest.
 
 Ручной rollback:
 
 ```bash
 /opt/quakke-video/production/scripts/rollback.sh
 ```
+
+Тот же rollback доступен через manual GitHub Actions workflow `Rollback`. Скрипт
+сначала поднимает previous manifest и меняет release-файлы только после успешных
+healthchecks.
+
+Shared edge хранит предыдущие Compose и Nginx templates отдельно. `deploy-edge.sh`
+автоматически восстанавливает их при ошибке Compose, а CI вызывает
+`rollback-edge.sh`, если после изменения edge не проходит внешний smoke test.
 
 Workers находятся в Compose profile `workers`, пока RabbitMQ consumers не реализованы.
 После реализации в environment file добавляется `ENABLE_WORKERS=true`.
