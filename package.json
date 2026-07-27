@@ -39,6 +39,11 @@
       "path": "node_modules/cz-git"
     }
   },
+  "pnpm": {
+    "overrides": {
+      "sharp": "0.35.0"
+    }
+  },
   "private": true,
   "devDependencies": {
     "@babel/core": "^7.14.5",

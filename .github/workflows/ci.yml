@@ -35,6 +35,7 @@ env:
   IMAGE_REGISTRY: ghcr.io
   IMAGE_NAMESPACE: ${{ github.repository_owner }}
   NX_DAEMON: 'false'
+  TRIVY_DISABLE_VEX_NOTICE: 'true'
 
 jobs:
   changes:
