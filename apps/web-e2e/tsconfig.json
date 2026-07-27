@@ -6,6 +6,11 @@
     "sourceMap": false,
     "types": ["node"]
   },
+  "nx": {
+    "sync": {
+      "ignoredDependencies": ["@quakke/eslint-config"]
+    }
+  },
   "include": [
     "**/*.ts",
     "**/*.js",
@@ -22,10 +27,5 @@
     "eslint.config.js",
     "eslint.config.mjs",
     "eslint.config.cjs"
-  ],
-  "references": [
-    {
-      "path": "../../packages/eslint-config"
-    }
   ]
 }
