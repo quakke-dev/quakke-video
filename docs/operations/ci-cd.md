@@ -20,6 +20,10 @@ VPS.
    `production`.
 7. После production deploy выполняются smoke checks и cleanup.
 
+Stage и production также можно запустить вручную из GitHub Actions. Ручной запуск
+выполняет тот же pipeline с quality, integration, images, environment approval и
+deploy, а не обходит проверки.
+
 Revert не является CI job. Для отката приложения используется release manifest,
 а для отмены изменения в истории - обычный Conventional Commit `revert:`.
 
@@ -81,6 +85,33 @@ provenance/SBOM и запускает Trivy.
 `deploy`
 : Ожидает manual environment approval, проверяет, что candidate не устарел, доставляет
 manifest на VPS, проверяет health endpoints и запускает stage e2e.
+
+## Ручной deploy из GitHub UI
+
+Сначала изменения workflow должны попасть в default branch `main`: GitHub показывает
+`Run workflow` и его inputs из версии workflow, находящейся в default branch.
+
+1. Откройте `GitHub -> Actions -> Pipeline`.
+2. Нажмите `Run workflow`.
+3. Выберите Git branch или tag.
+4. Выберите `deploy_environment`: `stage` или `production`.
+5. Оставьте `force_all=true` для полного воспроизводимого deploy.
+6. Нажмите `Run workflow`.
+7. После успешных проверок откройте ожидающий job `deploy`, нажмите
+   `Review deployments` и подтвердите выбранное Environment.
+
+Для `production` workflow принимает только ветку `main`. Stage можно развернуть из
+выбранной task branch, чтобы проверить её до merge. `force_all=true` собирает все шесть
+application images; это безопасный default для первого и ручного deploy. При
+`force_all=false` рассчитываются только проекты, затронутые последним commit выбранной
+ветки.
+
+`dependency-review` в ручном workflow пропускается, поскольку эта проверка работает
+только с dependency diff pull request. Quality, integration, image scanning, smoke
+checks и stage e2e сохраняются.
+
+Для обоих GitHub Environments можно оставить required reviewer, но при работе одним
+разработчиком опция `Prevent self-review` должна быть выключена.
 
 ## Независимые версии images
 

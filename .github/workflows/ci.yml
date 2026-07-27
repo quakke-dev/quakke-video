@@ -14,11 +14,19 @@ on:
       - main
   workflow_dispatch:
     inputs:
+      deploy_environment:
+        description: Environment to deploy
+        required: true
+        type: choice
+        options:
+          - stage
+          - production
+        default: stage
       force_all:
-        description: Build and deploy every application image
-        required: false
+        description: Build and deploy all application images
+        required: true
         type: boolean
-        default: false
+        default: true
 
 permissions:
   contents: read
@@ -54,6 +62,7 @@ jobs:
       has_e2e: ${{ steps.affected.outputs.has_e2e }}
       infra_changed: ${{ steps.affected.outputs.infra_changed }}
       edge_changed: ${{ steps.affected.outputs.edge_changed }}
+      deploy_environment: ${{ steps.affected.outputs.deploy_environment }}
 
     steps:
       - name: Checkout
@@ -77,7 +86,9 @@ jobs:
         id: affected
         env:
           EVENT_NAME: ${{ github.event_name }}
+          DEPLOY_ENVIRONMENT_INPUT: ${{ inputs.deploy_environment || '' }}
           FORCE_ALL: ${{ inputs.force_all || 'false' }}
+          GIT_REF: ${{ github.ref }}
           PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           PUSH_BASE_SHA: ${{ github.event.before }}
@@ -85,9 +96,41 @@ jobs:
         run: |
           set -eu
 
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
+          case "$EVENT_NAME" in
+            pull_request)
+              deploy_environment=stage
+              ;;
+            push)
+              deploy_environment=production
+              ;;
+            workflow_dispatch)
+              deploy_environment=$DEPLOY_ENVIRONMENT_INPUT
+              ;;
+            *)
+              echo "Unsupported event: $EVENT_NAME" >&2
+              exit 1
+              ;;
+          esac
+
+          if [ "$deploy_environment" != "stage" ] &&
+            [ "$deploy_environment" != "production" ]; then
+            echo "Unsupported deploy environment: $deploy_environment" >&2
+            exit 1
+          fi
+
+          if [ "$EVENT_NAME" = "workflow_dispatch" ] &&
+            [ "$deploy_environment" = "production" ] &&
+            [ "$GIT_REF" != "refs/heads/main" ]; then
+            echo "Manual production deploys must use the main branch" >&2
+            exit 1
+          fi
+
+          if [ "$EVENT_NAME" = "pull_request" ]; then
             base="$PR_BASE_SHA"
             head="$PR_HEAD_SHA"
+          elif [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            head="$PUSH_HEAD_SHA"
+            base=$(git rev-parse "$head^" 2>/dev/null || true)
           else
             base="$PUSH_BASE_SHA"
             head="$PUSH_HEAD_SHA"
@@ -218,6 +261,7 @@ jobs:
             printf 'has_e2e=%s\n' "$has_e2e"
             printf 'infra_changed=%s\n' "$infra_changed"
             printf 'edge_changed=%s\n' "$edge_changed"
+            printf 'deploy_environment=%s\n' "$deploy_environment"
           } >>"$GITHUB_OUTPUT"
 
   quality:
@@ -433,10 +477,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     concurrency:
-      group: deploy-${{ github.event_name == 'pull_request' && 'stage' || 'production' }}
+      group: deploy-${{ needs.changes.outputs.deploy_environment }}
       cancel-in-progress: false
     environment:
-      name: ${{ github.event_name == 'pull_request' && 'stage' || 'production' }}
+      name: ${{ needs.changes.outputs.deploy_environment }}
       url: ${{ vars.PUBLIC_URL }}
 
     steps:
@@ -448,6 +492,7 @@ jobs:
       - name: Reject superseded release
         env:
           GH_TOKEN: ${{ github.token }}
+          DEPLOY_ENVIRONMENT: ${{ needs.changes.outputs.deploy_environment }}
           EXPECTED_SHA: ${{ needs.changes.outputs.head }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
@@ -458,7 +503,7 @@ jobs:
               "repos/${{ github.repository }}/pulls/$PR_NUMBER" \
               --jq '"\(.state) \(.head.sha)"')
             [ "$current_state" = "open $EXPECTED_SHA" ]
-          else
+          elif [ "$DEPLOY_ENVIRONMENT" = "production" ]; then
             current_sha=$(gh api \
               "repos/${{ github.repository }}/commits/main" \
               --jq '.sha')
@@ -510,7 +555,7 @@ jobs:
 
       - name: Upload deployment bundle
         env:
-          DEPLOY_ARCHIVE: /tmp/quakke-video-${{ github.event_name == 'pull_request' && 'stage' || 'production' }}-${{ needs.changes.outputs.head }}.tar.gz
+          DEPLOY_ARCHIVE: /tmp/quakke-video-${{ needs.changes.outputs.deploy_environment }}-${{ needs.changes.outputs.head }}.tar.gz
           DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
           DEPLOY_PORT: ${{ vars.DEPLOY_PORT }}
           DEPLOY_USER: ${{ vars.DEPLOY_USER }}
@@ -523,7 +568,7 @@ jobs:
       - name: Deploy immutable release
         env:
           AFFECTED_SERVICES: ${{ needs.changes.outputs.image_services }}
-          DEPLOY_ARCHIVE: /tmp/quakke-video-${{ github.event_name == 'pull_request' && 'stage' || 'production' }}-${{ needs.changes.outputs.head }}.tar.gz
+          DEPLOY_ARCHIVE: /tmp/quakke-video-${{ needs.changes.outputs.deploy_environment }}-${{ needs.changes.outputs.head }}.tar.gz
           DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
           DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
           DEPLOY_PORT: ${{ vars.DEPLOY_PORT }}
@@ -541,7 +586,9 @@ jobs:
              '$DEPLOY_PATH/scripts/deploy.sh' '$RELEASE_SHA' '$AFFECTED_SERVICES'"
 
       - name: Deploy shared edge
-        if: github.event_name != 'pull_request' && needs.changes.outputs.edge_changed == 'true'
+        if: >-
+          needs.changes.outputs.deploy_environment == 'production' &&
+          needs.changes.outputs.edge_changed == 'true'
         env:
           DEPLOY_EDGE_PATH: ${{ vars.DEPLOY_EDGE_PATH }}
           DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
@@ -564,11 +611,12 @@ jobs:
           API_URL: ${{ vars.API_URL }}
           BASIC_AUTH_PASSWORD: ${{ secrets.E2E_BASIC_AUTH_PASSWORD }}
           BASIC_AUTH_USERNAME: ${{ secrets.E2E_BASIC_AUTH_USERNAME }}
+          DEPLOY_ENVIRONMENT: ${{ needs.changes.outputs.deploy_environment }}
           WEB_URL: ${{ vars.PUBLIC_URL }}
         run: |
           set -eu
 
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
+          if [ "$DEPLOY_ENVIRONMENT" = "stage" ]; then
             curl --fail --silent --show-error --retry 5 --retry-all-errors \
               --user "$BASIC_AUTH_USERNAME:$BASIC_AUTH_PASSWORD" \
               "$WEB_URL/" >/dev/null
@@ -583,26 +631,36 @@ jobs:
           fi
 
       - name: Install pnpm
-        if: github.event_name == 'pull_request' && needs.changes.outputs.e2e_projects != ''
+        if: >-
+          needs.changes.outputs.deploy_environment == 'stage' &&
+          needs.changes.outputs.e2e_projects != ''
         uses: pnpm/action-setup@v6
 
       - name: Set up Node.js
-        if: github.event_name == 'pull_request' && needs.changes.outputs.e2e_projects != ''
+        if: >-
+          needs.changes.outputs.deploy_environment == 'stage' &&
+          needs.changes.outputs.e2e_projects != ''
         uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: pnpm
 
       - name: Install dependencies
-        if: github.event_name == 'pull_request' && needs.changes.outputs.e2e_projects != ''
+        if: >-
+          needs.changes.outputs.deploy_environment == 'stage' &&
+          needs.changes.outputs.e2e_projects != ''
         run: pnpm install --frozen-lockfile
 
       - name: Install Chromium
-        if: github.event_name == 'pull_request' && needs.changes.outputs.e2e_projects != ''
+        if: >-
+          needs.changes.outputs.deploy_environment == 'stage' &&
+          needs.changes.outputs.e2e_projects != ''
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Run affected stage e2e
-        if: github.event_name == 'pull_request' && needs.changes.outputs.e2e_projects != ''
+        if: >-
+          needs.changes.outputs.deploy_environment == 'stage' &&
+          needs.changes.outputs.e2e_projects != ''
         env:
           ADMIN_BASE_URL: https://admin.quakke-video-stage.tech
           E2E_BASIC_AUTH_PASSWORD: ${{ secrets.E2E_BASIC_AUTH_PASSWORD }}
