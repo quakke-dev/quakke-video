@@ -1,13 +1,13 @@
 # syntax=docker/dockerfile:1.7
 
-FROM node:26.5.0-alpine3.23 AS builder
+FROM node:24.18.0-alpine3.23 AS builder
 
 ENV HUSKY=0 \
     NX_DAEMON=false
 
 WORKDIR /workspace
 
-RUN corepack enable && corepack prepare pnpm@10.22.0 --activate
+RUN npm install --global pnpm@10.22.0
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm fetch --frozen-lockfile
@@ -18,7 +18,7 @@ RUN pnpm install --offline --frozen-lockfile
 ARG PROJECT
 RUN pnpm nx build "${PROJECT}" --configuration=production
 
-FROM node:26.5.0-alpine3.23 AS runtime
+FROM node:24.18.0-alpine3.23 AS runtime
 
 ENV NODE_ENV=production
 
