@@ -115,7 +115,7 @@
     "@nestjs/platform-express": "^11.0.0",
     "axios": "^1.6.0",
     "next": "~16.1.6",
-    "react": "^19.0.0",
+    "react": "^19.2.8",
     "react-dom": "^19.0.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.0"
