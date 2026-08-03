@@ -112,7 +112,7 @@
     "vitest": "~4.1.10",
     "webpack": "^5.101.3",
     "webpack-cli": "^7.2.1",
-    "webpack-dev-server": "^5.2.1"
+    "webpack-dev-server": "^5.2.6"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.28",
