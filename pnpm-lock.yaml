@@ -77,7 +77,7 @@ importers:
         version: 23.0.1(ed8a30a657b390e8cc7bb80e33875606)
       '@nx/next':
         specifier: 23.0.1
-        version: 23.0.1(fdeb29a5124fdea357a281fa70ccdded)
+        version: 23.0.1(fdc5d81264daf73389cc5dfbde25da3d)
       '@nx/node':
         specifier: 23.0.1
         version: 23.0.1(5af9c8c1bbb6cb84a7da6a5445b57826)
@@ -86,13 +86,13 @@ importers:
         version: 23.0.1(@babel/traverse@7.29.7)(@nx/jest@23.0.1(96d4c4a9e5989c896d531de0314ab10b))(@playwright/test@1.62.0)(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(@zkochan/js-yaml@0.0.7)(eslint@9.39.4(jiti@2.7.0))(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(verdaccio@6.7.4(typanion@3.14.0))
       '@nx/react':
         specifier: 23.0.1
-        version: 23.0.1(789507a7d67aa91a8a92168bf65b9c41)
+        version: 23.0.1(4c2904b8b7f426112f0fa920446a933c)
       '@nx/rollup':
         specifier: 23.0.1
         version: 23.0.1(@babel/core@7.29.7)(@babel/traverse@7.29.7)(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(@types/babel__core@7.20.5)(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(rollup@4.62.2)(typescript@6.0.3)(verdaccio@6.7.4(typanion@3.14.0))
       '@nx/storybook':
         specifier: 23.0.1
-        version: 23.0.1(@babel/traverse@7.29.7)(@nx/jest@23.0.1(96d4c4a9e5989c896d531de0314ab10b))(@nx/web@23.0.1(8157e8d9eb46f33013164d69b40f71fc))(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(@zkochan/js-yaml@0.0.7)(eslint@9.39.4(jiti@2.7.0))(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(storybook@10.5.5(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.7))(typescript@6.0.3)(verdaccio@6.7.4(typanion@3.14.0))
+        version: 23.0.1(@babel/traverse@7.29.7)(@nx/jest@23.0.1(96d4c4a9e5989c896d531de0314ab10b))(@nx/web@23.0.1(6289e24c007f7a32346219b1d2acf049))(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(@zkochan/js-yaml@0.0.7)(eslint@9.39.4(jiti@2.7.0))(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(storybook@10.5.5(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.7))(typescript@6.0.3)(verdaccio@6.7.4(typanion@3.14.0))
       '@nx/vite':
         specifier: 23.0.1
         version: 23.0.1(3cb42b148a18a59c4a60a2d95c522f26)
@@ -101,10 +101,10 @@ importers:
         version: 23.0.1(3cb42b148a18a59c4a60a2d95c522f26)
       '@nx/web':
         specifier: 23.0.1
-        version: 23.0.1(8157e8d9eb46f33013164d69b40f71fc)
+        version: 23.0.1(6289e24c007f7a32346219b1d2acf049)
       '@nx/webpack':
         specifier: 23.0.1
-        version: 23.0.1(@babel/traverse@7.29.7)(@rspack/core@1.6.8(@swc/helpers@0.5.18))(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(esbuild@0.28.1)(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(typescript@6.0.3)(verdaccio@6.7.4(typanion@3.14.0))(webpack-cli@7.2.1)(webpack-dev-server@5.2.5)(webpack@5.105.2)
+        version: 23.0.1(@babel/traverse@7.29.7)(@rspack/core@1.6.8(@swc/helpers@0.5.18))(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(esbuild@0.28.1)(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(typescript@6.0.3)(verdaccio@6.7.4(typanion@3.14.0))(webpack-cli@7.2.1)(webpack-dev-server@5.2.6)(webpack@5.105.2)
       '@playwright/test':
         specifier: ^1.62.0
         version: 1.62.0
@@ -236,10 +236,10 @@ importers:
         version: 5.105.2(@swc/core@1.15.46(@swc/helpers@0.5.18))(esbuild@0.28.1)(postcss@8.5.15)(webpack-cli@7.2.1)
       webpack-cli:
         specifier: ^7.2.1
-        version: 7.2.1(js-yaml@4.2.0)(json5@2.2.3)(webpack-dev-server@5.2.5)(webpack@5.105.2)
+        version: 7.2.1(js-yaml@4.2.0)(json5@2.2.3)(webpack-dev-server@5.2.6)(webpack@5.105.2)
       webpack-dev-server:
-        specifier: ^5.2.1
-        version: 5.2.5(tslib@2.8.1)(webpack-cli@7.2.1)(webpack@5.105.2)
+        specifier: ^5.2.6
+        version: 5.2.6(tslib@2.8.1)(webpack-cli@7.2.1)(webpack@5.105.2)
 
   apps/admin:
     dependencies:
@@ -1840,50 +1840,50 @@ packages:
     peerDependencies:
       tslib: '2'
 
-  '@jsonjoy.com/fs-core@4.57.8':
-    resolution: {integrity: sha512-YzVbwggV9452VCeHgo0bjsTaUt1O7JE0XpEsPar93nn/+RAwXk0mb1Y+f5EDJ3TRtRCFe+Ck5RuojdfB4jeHVw==}
+  '@jsonjoy.com/fs-core@4.65.0':
+    resolution: {integrity: sha512-dOgsWAcYrFd2DoZh4eG4wdZWMg/oyOJeHElsrcn26uaP/vzGwerGy0BsERJFX0lEZUwYUKGDwPid4LcjrG4MDQ==}
     engines: {node: '>=10.0'}
     peerDependencies:
       tslib: '2'
 
-  '@jsonjoy.com/fs-fsa@4.57.8':
-    resolution: {integrity: sha512-vmClyvCQMxgqz7uamDiGtRfp4MjzOznk3pcQjCxlIwJcw7TWeyr+bF30hI0x8NxdtNOGMg1pHM74VDIXOeyjuw==}
+  '@jsonjoy.com/fs-fsa@4.65.0':
+    resolution: {integrity: sha512-v8ZauQBDKrcydshMHPgeP8j7o38QN5r4sLnEkZukBSRN4mS+ZBVmvTBn/HEIIl1TqB+gzkC0kYG3FpKV7sWrpA==}
     engines: {node: '>=10.0'}
     peerDependencies:
       tslib: '2'
 
-  '@jsonjoy.com/fs-node-builtins@4.57.8':
-    resolution: {integrity: sha512-mxXSXw8zZwRVakcjLqR2I/psy4gURFSASZS10kKJ2kJw05GC2nXGroGrWVHxwgkxXgQLsFQnB74QaLzsxzdL/w==}
+  '@jsonjoy.com/fs-node-builtins@4.65.0':
+    resolution: {integrity: sha512-TM097bApxy7ICbaDFRW8bpPYVzBZ8uFikxx67gsdpV09lz9/bB0P/AmonDqxOD9rns33ZzNIPPjxxwhtYYEnIA==}
     engines: {node: '>=10.0'}
     peerDependencies:
       tslib: '2'
 
-  '@jsonjoy.com/fs-node-to-fsa@4.57.8':
-    resolution: {integrity: sha512-AWZcT/4+H+iDl4XCukbXrarvwEgOrf/prFI5/7eg4ix9FxqVsZysIDJd1Kjd+AjlCeHKHJOaRqjLd5HiGSCJEw==}
+  '@jsonjoy.com/fs-node-to-fsa@4.65.0':
+    resolution: {integrity: sha512-VbeTkXoftoTu39EIxT37AOWlMSJ/3Br2hfXWecuw4g7jktKQH6y8TUS/+aO+qTO2+Ko0b/YcTrkEJkQaoks8Nw==}
     engines: {node: '>=10.0'}
     peerDependencies:
       tslib: '2'
 
-  '@jsonjoy.com/fs-node-utils@4.57.8':
-    resolution: {integrity: sha512-E/bJ7sQAb4pu9nbeJhbULU3WnqWrswte4N9Js/oHt7aHB746S8/XBqKlcbrqIgnD3095XluovNEZuu5ONT230g==}
+  '@jsonjoy.com/fs-node-utils@4.65.0':
+    resolution: {integrity: sha512-XbSn8tEQ0LTXYEI4ZcbafTGvKvJjZNshrdZdNxzGijWNGrke8XR4tUMGLjYfzt7RCBLuUuYhcnM8f1cF6CNG4w==}
     engines: {node: '>=10.0'}
     peerDependencies:
       tslib: '2'
 
-  '@jsonjoy.com/fs-node@4.57.8':
-    resolution: {integrity: sha512-IPEOlDYSnTDYpjQlQg2F8h+eqxKQN3sdbroI0WrteRiQZ462HzVpBo9ZZX485njz4nAacoe3fd4iDiIhk+k5Hg==}
+  '@jsonjoy.com/fs-node@4.65.0':
+    resolution: {integrity: sha512-Zr6GcZnIiiInuYevNmgTvmmROWFOpD296X/XRQi90w9i1vf4cmc64F/06kmUsquBgnWmE++vjpT5INAqOPhxTg==}
     engines: {node: '>=10.0'}
     peerDependencies:
       tslib: '2'
 
-  '@jsonjoy.com/fs-print@4.57.8':
-    resolution: {integrity: sha512-DfzhOBpmvNu5P/KSe4NNQaOnvNliTdcf0qrh/4EReErF/XUQXYkd0vZl/OiJCm/qjEEo8DWRstliw2/JNS84dA==}
+  '@jsonjoy.com/fs-print@4.65.0':
+    resolution: {integrity: sha512-03xpLdUkzAknoVGZSE+IiFOUsiGAVO/t0CO9TsEgnUHEumiYCRyKAqz8fU+YayDpPBHkHJoctZyr0e3VOh4LEw==}
     engines: {node: '>=10.0'}
     peerDependencies:
       tslib: '2'
 
-  '@jsonjoy.com/fs-snapshot@4.57.8':
-    resolution: {integrity: sha512-L+eqKaWOHLDaiMv1dh/EWQ4hA+o6xAhWSumTo3Teg7OM18jU/KE13/e8Mfal+eAZ/pSl4wIhKHcDiwapJzC8Wg==}
+  '@jsonjoy.com/fs-snapshot@4.65.0':
+    resolution: {integrity: sha512-n25VB9CPa9dvlseOj8HZy+/BA/Gl2r0+bIXF46Uy0oLvcirQjH8by4wsioOdDjUYsOuAzn/JelMVSb/d1zks7Q==}
     engines: {node: '>=10.0'}
     peerDependencies:
       tslib: '2'
@@ -3695,8 +3695,8 @@ packages:
   '@types/estree@1.0.9':
     resolution: {integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==}
 
-  '@types/express-serve-static-core@4.19.8':
-    resolution: {integrity: sha512-02S5fmqeoKzVZCHPZid4b8JH2eM5HzQLZWN2FohQEy/0eXTq8VXZfSN6Pcr3F6N9R/vNrj7cpgbhjie6m/1tCA==}
+  '@types/express-serve-static-core@4.19.9':
+    resolution: {integrity: sha512-QP2ESEe/ImWY0HDwNAnK9PvEffUyhLTnWkk7KXzHfyeWAnlrDe1fN77bXl6ia8KT3wPlmA7t9/VPRpnf4Ex9sg==}
 
   '@types/express@4.17.25':
     resolution: {integrity: sha512-dVd04UKsfpINUnK0yBoYHDF3xu7xVH4BuDotC/xGuycx4CgbP48X/KF/586bcObxT0HENHXEU8Nqtu6NR+eKhw==}
@@ -4605,16 +4605,16 @@ packages:
   bl@4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
 
-  body-parser@1.20.5:
-    resolution: {integrity: sha512-3grm+/2tUOvu2cjJkvsIxrv/wVpfXQW4PsQHYm7yk4vfpu7Ekl6nEsYBoJUL6qDwZUx8wUhQ8tR2qz+ad9c9OA==}
+  body-parser@1.20.6:
+    resolution: {integrity: sha512-p5tAzS57i5MV9fZFDj9LeIiTZEufbSe2eDozP+ElheSUq1m74CRq1jI4mYNDdVs9vQztXFLuk/Gd6BWTdwRJ5g==}
     engines: {node: '>= 0.8', npm: 1.2.8000 || >= 1.4.16}
 
   body-parser@2.3.0:
     resolution: {integrity: sha512-2cGmJupaNgg+QUwVLAucDuWuoMZ6EX9iHDRswZ5lsNYEmwPaRknMPCLZz07yTzVq/83p4o/wzbDZbBrTvGGTIw==}
     engines: {node: '>=18'}
 
-  bonjour-service@1.4.2:
-    resolution: {integrity: sha512-lMskhnsW70yWHr4PhPeh2rvaIkLSaDpp+nmtbXBZaNKTXwxL73QOkW6HhbzqTImXjevn9TreGT4GACGBCGP9nQ==}
+  bonjour-service@1.4.4:
+    resolution: {integrity: sha512-jCZcVv7eoc4QesRscwEZtSROBen+6LpKAmBIsQYQrsAeVHLyMXWX/t6eIV5KiRZYNUBl8eVqImEEMQ8L5+c/Kw==}
 
   boolbase@1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
@@ -7161,8 +7161,8 @@ packages:
     resolution: {integrity: sha512-UERzLsxzllchadvbPs5aolHh65ISpKpM+ccLbOJ8/vvpBKmAWf+la7dXFy7Mr0ySHbdHrFv5kGFCUHHe6GFEmw==}
     engines: {node: '>= 4.0.0'}
 
-  memfs@4.57.8:
-    resolution: {integrity: sha512-bApYhn8BLpFAnAQmFfEl/NPN+8qx5Ar3V4Qt3ek23mVwBEElzV7c6XoPkb/PCG8ZFpowCEpHcPwMFTwHS7tSMA==}
+  memfs@4.65.0:
+    resolution: {integrity: sha512-9odCq2b7Vgir4E/uqruVQf47iF/Eu2CEZLE1CaBzPHfuFwhJWvxIKlcYnYQ+xjrZG3cS9teP6xgMEW+TRcLVxg==}
     peerDependencies:
       tslib: '2'
 
@@ -8064,6 +8064,10 @@ packages:
     resolution: {integrity: sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==}
     engines: {node: '>= 0.6'}
 
+  range-parser@1.3.0:
+    resolution: {integrity: sha512-hek2mFQpPuI4E1BBKrSto+BU3e3x4xuarsbiwr3+lf7p44juvFMV0XFWQAP3xUyqXA4RrXLIoaSUGbSt056ZMw==}
+    engines: {node: '>= 0.6'}
+
   raw-body@2.5.3:
     resolution: {integrity: sha512-s4VSOf6yN0rvbRZGxs8Om5CWj6seneMwK3oDb4lWDH0UPhWcxwOWw5+qk24bxq87szX1ydrwylIOp2uG1ojUpA==}
     engines: {node: '>= 0.8'}
@@ -8560,8 +8564,8 @@ packages:
   shell-exec@1.0.2:
     resolution: {integrity: sha512-jyVd+kU2X+mWKMmGhx4fpWbPsjvD53k9ivqetutVW/BQ+WIZoDoP4d8vUMGezV6saZsiNoW2f9GIhg9Dondohg==}
 
-  shell-quote@1.9.0:
-    resolution: {integrity: sha512-Iov+JwFv/2HcTpcwNMKd8+IWNb8tboQJNQTkAY/LLVK7gGH9jy+LGkVqPxfekHl+yMmiqXszdGWXgkfml7hjqA==}
+  shell-quote@1.10.0:
+    resolution: {integrity: sha512-w1aiOKwKuRgtwAReIIj89puqg+I7GvX4IbLrvmhXbzQsj1+Zwi4VO3+fa6ZF91TWSjIxoEkKnMeHcLEODK5ZXA==}
     engines: {node: '>= 0.4'}
 
   side-channel-list@1.0.1:
@@ -8975,8 +8979,8 @@ packages:
   text-decoder@1.2.7:
     resolution: {integrity: sha512-vlLytXkeP4xvEq2otHeJfSQIRyWxo/oZGEbXrtEEF9Hnmrdly59sUbzZ/QgyWuLYHctCHxFF4tRQZNQ9k60ExQ==}
 
-  thingies@2.6.0:
-    resolution: {integrity: sha512-rMHRjmlFLM1R96UYPvpmnc3LYtdFrT33JIB7L9hetGue1qAPfn1N2LJeEjxUSidu1Iku+haLZXDuEXUHNGO/lg==}
+  thingies@2.6.1:
+    resolution: {integrity: sha512-cV/CMGTK3M4MlnJ/0At6ismOw/A0EEniDNScajjz/Br3c1sqE72YD01rGpPTKwd27wAxI5Pr+6+0w8yofzFRYw==}
     engines: {node: '>=10.18'}
     peerDependencies:
       tslib: ^2
@@ -9511,8 +9515,8 @@ packages:
       webpack:
         optional: true
 
-  webpack-dev-server@5.2.5:
-    resolution: {integrity: sha512-4wZtCquSuv9CKX8oybo+mqxtxZqWz47uM1Ch94lxowBztOhWCbhqvRbfC/mODOwxgV2brY+JGZpHq58/SuVFYg==}
+  webpack-dev-server@5.2.6:
+    resolution: {integrity: sha512-HNLRmamRvVavZQ+avceZifmv8hmdUjg43t6MI4SqJDwFdW7RPQwH5vzGhDRZSX59SgfbeHhLnq3g+uooWo7pVw==}
     engines: {node: '>= 18.12.0'}
     hasBin: true
     peerDependencies:
@@ -11430,58 +11434,59 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@jsonjoy.com/fs-core@4.57.8(tslib@2.8.1)':
+  '@jsonjoy.com/fs-core@4.65.0(tslib@2.8.1)':
     dependencies:
-      '@jsonjoy.com/fs-node-builtins': 4.57.8(tslib@2.8.1)
-      '@jsonjoy.com/fs-node-utils': 4.57.8(tslib@2.8.1)
-      thingies: 2.6.0(tslib@2.8.1)
+      '@jsonjoy.com/fs-node-builtins': 4.65.0(tslib@2.8.1)
+      '@jsonjoy.com/fs-node-utils': 4.65.0(tslib@2.8.1)
+      thingies: 2.6.1(tslib@2.8.1)
       tslib: 2.8.1
 
-  '@jsonjoy.com/fs-fsa@4.57.8(tslib@2.8.1)':
+  '@jsonjoy.com/fs-fsa@4.65.0(tslib@2.8.1)':
     dependencies:
-      '@jsonjoy.com/fs-core': 4.57.8(tslib@2.8.1)
-      '@jsonjoy.com/fs-node-builtins': 4.57.8(tslib@2.8.1)
-      '@jsonjoy.com/fs-node-utils': 4.57.8(tslib@2.8.1)
-      thingies: 2.6.0(tslib@2.8.1)
+      '@jsonjoy.com/fs-core': 4.65.0(tslib@2.8.1)
+      '@jsonjoy.com/fs-node-builtins': 4.65.0(tslib@2.8.1)
+      '@jsonjoy.com/fs-node-utils': 4.65.0(tslib@2.8.1)
+      thingies: 2.6.1(tslib@2.8.1)
       tslib: 2.8.1
 
-  '@jsonjoy.com/fs-node-builtins@4.57.8(tslib@2.8.1)':
+  '@jsonjoy.com/fs-node-builtins@4.65.0(tslib@2.8.1)':
     dependencies:
       tslib: 2.8.1
 
-  '@jsonjoy.com/fs-node-to-fsa@4.57.8(tslib@2.8.1)':
+  '@jsonjoy.com/fs-node-to-fsa@4.65.0(tslib@2.8.1)':
     dependencies:
-      '@jsonjoy.com/fs-fsa': 4.57.8(tslib@2.8.1)
-      '@jsonjoy.com/fs-node-builtins': 4.57.8(tslib@2.8.1)
-      '@jsonjoy.com/fs-node-utils': 4.57.8(tslib@2.8.1)
+      '@jsonjoy.com/fs-fsa': 4.65.0(tslib@2.8.1)
+      '@jsonjoy.com/fs-node-builtins': 4.65.0(tslib@2.8.1)
+      '@jsonjoy.com/fs-node-utils': 4.65.0(tslib@2.8.1)
       tslib: 2.8.1
 
-  '@jsonjoy.com/fs-node-utils@4.57.8(tslib@2.8.1)':
+  '@jsonjoy.com/fs-node-utils@4.65.0(tslib@2.8.1)':
     dependencies:
-      '@jsonjoy.com/fs-node-builtins': 4.57.8(tslib@2.8.1)
-      tslib: 2.8.1
-
-  '@jsonjoy.com/fs-node@4.57.8(tslib@2.8.1)':
-    dependencies:
-      '@jsonjoy.com/fs-core': 4.57.8(tslib@2.8.1)
-      '@jsonjoy.com/fs-node-builtins': 4.57.8(tslib@2.8.1)
-      '@jsonjoy.com/fs-node-utils': 4.57.8(tslib@2.8.1)
-      '@jsonjoy.com/fs-print': 4.57.8(tslib@2.8.1)
-      '@jsonjoy.com/fs-snapshot': 4.57.8(tslib@2.8.1)
+      '@jsonjoy.com/fs-node-builtins': 4.65.0(tslib@2.8.1)
       glob-to-regex.js: 1.2.0(tslib@2.8.1)
-      thingies: 2.6.0(tslib@2.8.1)
       tslib: 2.8.1
 
-  '@jsonjoy.com/fs-print@4.57.8(tslib@2.8.1)':
+  '@jsonjoy.com/fs-node@4.65.0(tslib@2.8.1)':
     dependencies:
-      '@jsonjoy.com/fs-node-utils': 4.57.8(tslib@2.8.1)
+      '@jsonjoy.com/fs-core': 4.65.0(tslib@2.8.1)
+      '@jsonjoy.com/fs-node-builtins': 4.65.0(tslib@2.8.1)
+      '@jsonjoy.com/fs-node-utils': 4.65.0(tslib@2.8.1)
+      '@jsonjoy.com/fs-print': 4.65.0(tslib@2.8.1)
+      '@jsonjoy.com/fs-snapshot': 4.65.0(tslib@2.8.1)
+      glob-to-regex.js: 1.2.0(tslib@2.8.1)
+      thingies: 2.6.1(tslib@2.8.1)
+      tslib: 2.8.1
+
+  '@jsonjoy.com/fs-print@4.65.0(tslib@2.8.1)':
+    dependencies:
+      '@jsonjoy.com/fs-node-utils': 4.65.0(tslib@2.8.1)
       tree-dump: 1.1.0(tslib@2.8.1)
       tslib: 2.8.1
 
-  '@jsonjoy.com/fs-snapshot@4.57.8(tslib@2.8.1)':
+  '@jsonjoy.com/fs-snapshot@4.65.0(tslib@2.8.1)':
     dependencies:
       '@jsonjoy.com/buffers': 17.67.0(tslib@2.8.1)
-      '@jsonjoy.com/fs-node-utils': 4.57.8(tslib@2.8.1)
+      '@jsonjoy.com/fs-node-utils': 4.65.0(tslib@2.8.1)
       '@jsonjoy.com/json-pack': 17.67.0(tslib@2.8.1)
       '@jsonjoy.com/util': 17.67.0(tslib@2.8.1)
       tslib: 2.8.1
@@ -11494,7 +11499,7 @@ snapshots:
       '@jsonjoy.com/json-pointer': 1.0.2(tslib@2.8.1)
       '@jsonjoy.com/util': 1.9.0(tslib@2.8.1)
       hyperdyperid: 1.2.0
-      thingies: 2.6.0(tslib@2.8.1)
+      thingies: 2.6.1(tslib@2.8.1)
       tree-dump: 1.1.0(tslib@2.8.1)
       tslib: 2.8.1
 
@@ -11506,7 +11511,7 @@ snapshots:
       '@jsonjoy.com/json-pointer': 17.67.0(tslib@2.8.1)
       '@jsonjoy.com/util': 17.67.0(tslib@2.8.1)
       hyperdyperid: 1.2.0
-      thingies: 2.6.0(tslib@2.8.1)
+      thingies: 2.6.1(tslib@2.8.1)
       tree-dump: 1.1.0(tslib@2.8.1)
       tslib: 2.8.1
 
@@ -12014,11 +12019,11 @@ snapshots:
       - nx
       - supports-color
 
-  '@nx/module-federation@23.0.1(dd0701d76da8cab0674aba666601b5ac)':
+  '@nx/module-federation@23.0.1(9b5bada2f8cf75a64321b33d492c6ab9)':
     dependencies:
       '@nx/devkit': 23.0.1(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))
       '@nx/js': 23.0.1(@babel/traverse@7.29.7)(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(verdaccio@6.7.4(typanion@3.14.0))
-      '@nx/web': 23.0.1(8157e8d9eb46f33013164d69b40f71fc)
+      '@nx/web': 23.0.1(6289e24c007f7a32346219b1d2acf049)
       '@rspack/core': 1.6.8(@swc/helpers@0.5.18)
       express: 4.22.2
       http-proxy-middleware: 3.0.7
@@ -12094,15 +12099,15 @@ snapshots:
       - typescript
       - verdaccio
 
-  '@nx/next@23.0.1(fdeb29a5124fdea357a281fa70ccdded)':
+  '@nx/next@23.0.1(fdc5d81264daf73389cc5dfbde25da3d)':
     dependencies:
       '@babel/plugin-proposal-decorators': 7.29.7(@babel/core@7.29.7)
       '@nx/devkit': 23.0.1(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))
       '@nx/eslint': 23.0.1(@babel/traverse@7.29.7)(@nx/jest@23.0.1(96d4c4a9e5989c896d531de0314ab10b))(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(@zkochan/js-yaml@0.0.7)(eslint@9.39.4(jiti@2.7.0))(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(verdaccio@6.7.4(typanion@3.14.0))
       '@nx/js': 23.0.1(@babel/traverse@7.29.7)(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(verdaccio@6.7.4(typanion@3.14.0))
-      '@nx/react': 23.0.1(789507a7d67aa91a8a92168bf65b9c41)
-      '@nx/web': 23.0.1(8157e8d9eb46f33013164d69b40f71fc)
-      '@nx/webpack': 23.0.1(@babel/traverse@7.29.7)(@rspack/core@1.6.8(@swc/helpers@0.5.18))(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(esbuild@0.28.1)(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(typescript@6.0.3)(verdaccio@6.7.4(typanion@3.14.0))(webpack-cli@7.2.1)(webpack-dev-server@5.2.5)(webpack@5.105.2)
+      '@nx/react': 23.0.1(4c2904b8b7f426112f0fa920446a933c)
+      '@nx/web': 23.0.1(6289e24c007f7a32346219b1d2acf049)
+      '@nx/webpack': 23.0.1(@babel/traverse@7.29.7)(@rspack/core@1.6.8(@swc/helpers@0.5.18))(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(esbuild@0.28.1)(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(typescript@6.0.3)(verdaccio@6.7.4(typanion@3.14.0))(webpack-cli@7.2.1)(webpack-dev-server@5.2.6)(webpack@5.105.2)
       '@phenomnomnominal/tsquery': 6.2.0(typescript@6.0.3)
       '@svgr/webpack': 8.1.0(typescript@6.0.3)
       copy-webpack-plugin: 14.0.0(webpack@5.105.2)
@@ -12243,14 +12248,14 @@ snapshots:
       - supports-color
       - verdaccio
 
-  '@nx/react@23.0.1(789507a7d67aa91a8a92168bf65b9c41)':
+  '@nx/react@23.0.1(4c2904b8b7f426112f0fa920446a933c)':
     dependencies:
       '@nx/devkit': 23.0.1(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))
       '@nx/eslint': 23.0.1(@babel/traverse@7.29.7)(@nx/jest@23.0.1(96d4c4a9e5989c896d531de0314ab10b))(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(@zkochan/js-yaml@0.0.7)(eslint@9.39.4(jiti@2.7.0))(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(verdaccio@6.7.4(typanion@3.14.0))
       '@nx/js': 23.0.1(@babel/traverse@7.29.7)(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(verdaccio@6.7.4(typanion@3.14.0))
-      '@nx/module-federation': 23.0.1(dd0701d76da8cab0674aba666601b5ac)
+      '@nx/module-federation': 23.0.1(9b5bada2f8cf75a64321b33d492c6ab9)
       '@nx/rollup': 23.0.1(@babel/core@7.29.7)(@babel/traverse@7.29.7)(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(@types/babel__core@7.20.5)(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(rollup@4.62.2)(typescript@6.0.3)(verdaccio@6.7.4(typanion@3.14.0))
-      '@nx/web': 23.0.1(8157e8d9eb46f33013164d69b40f71fc)
+      '@nx/web': 23.0.1(6289e24c007f7a32346219b1d2acf049)
       '@phenomnomnominal/tsquery': 6.2.0(typescript@6.0.3)
       '@svgr/webpack': 8.1.0(typescript@6.0.3)
       express: 4.22.2
@@ -12332,7 +12337,7 @@ snapshots:
       - typescript
       - verdaccio
 
-  '@nx/storybook@23.0.1(@babel/traverse@7.29.7)(@nx/jest@23.0.1(96d4c4a9e5989c896d531de0314ab10b))(@nx/web@23.0.1(8157e8d9eb46f33013164d69b40f71fc))(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(@zkochan/js-yaml@0.0.7)(eslint@9.39.4(jiti@2.7.0))(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(storybook@10.5.5(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.7))(typescript@6.0.3)(verdaccio@6.7.4(typanion@3.14.0))':
+  '@nx/storybook@23.0.1(@babel/traverse@7.29.7)(@nx/jest@23.0.1(96d4c4a9e5989c896d531de0314ab10b))(@nx/web@23.0.1(6289e24c007f7a32346219b1d2acf049))(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(@zkochan/js-yaml@0.0.7)(eslint@9.39.4(jiti@2.7.0))(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(storybook@10.5.5(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.7))(typescript@6.0.3)(verdaccio@6.7.4(typanion@3.14.0))':
     dependencies:
       '@nx/cypress': 23.0.1(@babel/traverse@7.29.7)(@nx/jest@23.0.1(96d4c4a9e5989c896d531de0314ab10b))(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(@zkochan/js-yaml@0.0.7)(eslint@9.39.4(jiti@2.7.0))(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(typescript@6.0.3)(verdaccio@6.7.4(typanion@3.14.0))
       '@nx/devkit': 23.0.1(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))
@@ -12343,7 +12348,7 @@ snapshots:
       storybook: 10.5.5(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.7)
       tslib: 2.8.1
     optionalDependencies:
-      '@nx/web': 23.0.1(8157e8d9eb46f33013164d69b40f71fc)
+      '@nx/web': 23.0.1(6289e24c007f7a32346219b1d2acf049)
     transitivePeerDependencies:
       - '@babel/traverse'
       - '@nx/jest'
@@ -12407,7 +12412,7 @@ snapshots:
       - typescript
       - verdaccio
 
-  '@nx/web@23.0.1(8157e8d9eb46f33013164d69b40f71fc)':
+  '@nx/web@23.0.1(6289e24c007f7a32346219b1d2acf049)':
     dependencies:
       '@nx/devkit': 23.0.1(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))
       '@nx/js': 23.0.1(@babel/traverse@7.29.7)(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(verdaccio@6.7.4(typanion@3.14.0))
@@ -12421,7 +12426,7 @@ snapshots:
       '@nx/jest': 23.0.1(96d4c4a9e5989c896d531de0314ab10b)
       '@nx/playwright': 23.0.1(@babel/traverse@7.29.7)(@nx/jest@23.0.1(96d4c4a9e5989c896d531de0314ab10b))(@playwright/test@1.62.0)(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(@zkochan/js-yaml@0.0.7)(eslint@9.39.4(jiti@2.7.0))(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(verdaccio@6.7.4(typanion@3.14.0))
       '@nx/vite': 23.0.1(3cb42b148a18a59c4a60a2d95c522f26)
-      '@nx/webpack': 23.0.1(@babel/traverse@7.29.7)(@rspack/core@1.6.8(@swc/helpers@0.5.18))(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(esbuild@0.28.1)(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(typescript@6.0.3)(verdaccio@6.7.4(typanion@3.14.0))(webpack-cli@7.2.1)(webpack-dev-server@5.2.5)(webpack@5.105.2)
+      '@nx/webpack': 23.0.1(@babel/traverse@7.29.7)(@rspack/core@1.6.8(@swc/helpers@0.5.18))(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(esbuild@0.28.1)(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(typescript@6.0.3)(verdaccio@6.7.4(typanion@3.14.0))(webpack-cli@7.2.1)(webpack-dev-server@5.2.6)(webpack@5.105.2)
     transitivePeerDependencies:
       - '@babel/traverse'
       - '@swc-node/register'
@@ -12432,7 +12437,7 @@ snapshots:
       - supports-color
       - verdaccio
 
-  '@nx/webpack@23.0.1(@babel/traverse@7.29.7)(@rspack/core@1.6.8(@swc/helpers@0.5.18))(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(esbuild@0.28.1)(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(typescript@6.0.3)(verdaccio@6.7.4(typanion@3.14.0))(webpack-cli@7.2.1)(webpack-dev-server@5.2.5)(webpack@5.105.2)':
+  '@nx/webpack@23.0.1(@babel/traverse@7.29.7)(@rspack/core@1.6.8(@swc/helpers@0.5.18))(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.46(@swc/helpers@0.5.18)))(@swc/core@1.15.46(@swc/helpers@0.5.18))(esbuild@0.28.1)(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))(typescript@6.0.3)(verdaccio@6.7.4(typanion@3.14.0))(webpack-cli@7.2.1)(webpack-dev-server@5.2.6)(webpack@5.105.2)':
     dependencies:
       '@babel/core': 7.29.7
       '@nx/devkit': 23.0.1(nx@23.0.1(@swc-node/register@1.12.1(@swc/core@1.15.46(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.46(@swc/helpers@0.5.18)))
@@ -12470,8 +12475,8 @@ snapshots:
       webpack-subresource-integrity: 5.1.0(webpack@5.105.2)
     optionalDependencies:
       webpack: 5.105.2(@swc/core@1.15.46(@swc/helpers@0.5.18))(esbuild@0.28.1)(postcss@8.5.15)(webpack-cli@7.2.1)
-      webpack-cli: 7.2.1(js-yaml@4.2.0)(json5@2.2.3)(webpack-dev-server@5.2.5)(webpack@5.105.2)
-      webpack-dev-server: 5.2.5(tslib@2.8.1)(webpack-cli@7.2.1)(webpack@5.105.2)
+      webpack-cli: 7.2.1(js-yaml@4.2.0)(json5@2.2.3)(webpack-dev-server@5.2.6)(webpack@5.105.2)
+      webpack-dev-server: 5.2.6(tslib@2.8.1)(webpack-cli@7.2.1)(webpack@5.105.2)
     transitivePeerDependencies:
       - '@babel/traverse'
       - '@minify-html/node'
@@ -13488,7 +13493,7 @@ snapshots:
 
   '@types/connect-history-api-fallback@1.5.4':
     dependencies:
-      '@types/express-serve-static-core': 4.19.8
+      '@types/express-serve-static-core': 4.19.9
       '@types/node': 24.13.2
 
   '@types/connect@3.4.38':
@@ -13513,7 +13518,7 @@ snapshots:
 
   '@types/estree@1.0.9': {}
 
-  '@types/express-serve-static-core@4.19.8':
+  '@types/express-serve-static-core@4.19.9':
     dependencies:
       '@types/node': 24.13.2
       '@types/qs': 6.15.1
@@ -13523,7 +13528,7 @@ snapshots:
   '@types/express@4.17.25':
     dependencies:
       '@types/body-parser': 1.19.6
-      '@types/express-serve-static-core': 4.19.8
+      '@types/express-serve-static-core': 4.19.9
       '@types/qs': 6.15.1
       '@types/serve-static': 1.15.10
 
@@ -14648,7 +14653,7 @@ snapshots:
       inherits: 2.0.4
       readable-stream: 3.6.2
 
-  body-parser@1.20.5:
+  body-parser@1.20.6:
     dependencies:
       bytes: 3.1.2
       content-type: 1.0.5
@@ -14679,7 +14684,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  bonjour-service@1.4.2:
+  bonjour-service@1.4.4:
     dependencies:
       fast-deep-equal: 3.1.3
       multicast-dns: 7.2.5
@@ -14984,7 +14989,7 @@ snapshots:
 
   compressible@2.0.18:
     dependencies:
-      mime-db: 1.52.0
+      mime-db: 1.54.0
 
   compression@1.8.1:
     dependencies:
@@ -15883,7 +15888,7 @@ snapshots:
     dependencies:
       accepts: 1.3.8
       array-flatten: 1.1.1
-      body-parser: 1.20.5
+      body-parser: 1.20.6
       content-disposition: 0.5.4
       content-type: 1.0.5
       cookie: 0.7.2
@@ -15919,7 +15924,7 @@ snapshots:
     dependencies:
       accepts: 1.3.8
       array-flatten: 1.1.1
-      body-parser: 1.20.5
+      body-parser: 1.20.6
       content-disposition: 0.5.4
       content-type: 1.0.5
       cookie: 0.7.2
@@ -15986,7 +15991,7 @@ snapshots:
 
   ext-list@2.2.2:
     dependencies:
-      mime-db: 1.52.0
+      mime-db: 1.54.0
 
   ext-name@5.0.0:
     dependencies:
@@ -17421,7 +17426,7 @@ snapshots:
   launch-editor@2.14.1:
     dependencies:
       picocolors: 1.1.1
-      shell-quote: 1.9.0
+      shell-quote: 1.10.0
 
   less-loader@12.3.3(@rspack/core@1.6.8(@swc/helpers@0.5.18))(less@4.5.1)(webpack@5.105.2):
     dependencies:
@@ -17690,20 +17695,20 @@ snapshots:
     dependencies:
       fs-monkey: 1.1.0
 
-  memfs@4.57.8(tslib@2.8.1):
+  memfs@4.65.0(tslib@2.8.1):
     dependencies:
-      '@jsonjoy.com/fs-core': 4.57.8(tslib@2.8.1)
-      '@jsonjoy.com/fs-fsa': 4.57.8(tslib@2.8.1)
-      '@jsonjoy.com/fs-node': 4.57.8(tslib@2.8.1)
-      '@jsonjoy.com/fs-node-builtins': 4.57.8(tslib@2.8.1)
-      '@jsonjoy.com/fs-node-to-fsa': 4.57.8(tslib@2.8.1)
-      '@jsonjoy.com/fs-node-utils': 4.57.8(tslib@2.8.1)
-      '@jsonjoy.com/fs-print': 4.57.8(tslib@2.8.1)
-      '@jsonjoy.com/fs-snapshot': 4.57.8(tslib@2.8.1)
+      '@jsonjoy.com/fs-core': 4.65.0(tslib@2.8.1)
+      '@jsonjoy.com/fs-fsa': 4.65.0(tslib@2.8.1)
+      '@jsonjoy.com/fs-node': 4.65.0(tslib@2.8.1)
+      '@jsonjoy.com/fs-node-builtins': 4.65.0(tslib@2.8.1)
+      '@jsonjoy.com/fs-node-to-fsa': 4.65.0(tslib@2.8.1)
+      '@jsonjoy.com/fs-node-utils': 4.65.0(tslib@2.8.1)
+      '@jsonjoy.com/fs-print': 4.65.0(tslib@2.8.1)
+      '@jsonjoy.com/fs-snapshot': 4.65.0(tslib@2.8.1)
       '@jsonjoy.com/json-pack': 1.21.0(tslib@2.8.1)
       '@jsonjoy.com/util': 1.9.0(tslib@2.8.1)
       glob-to-regex.js: 1.2.0(tslib@2.8.1)
-      thingies: 2.6.0(tslib@2.8.1)
+      thingies: 2.6.1(tslib@2.8.1)
       tree-dump: 1.1.0(tslib@2.8.1)
       tslib: 2.8.1
 
@@ -18713,6 +18718,8 @@ snapshots:
 
   range-parser@1.2.1: {}
 
+  range-parser@1.3.0: {}
+
   raw-body@2.5.3:
     dependencies:
       bytes: 3.1.2
@@ -19321,7 +19328,7 @@ snapshots:
 
   shell-exec@1.0.2: {}
 
-  shell-quote@1.9.0: {}
+  shell-quote@1.10.0: {}
 
   side-channel-list@1.0.1:
     dependencies:
@@ -19786,7 +19793,7 @@ snapshots:
     transitivePeerDependencies:
       - react-native-b4a
 
-  thingies@2.6.0(tslib@2.8.1):
+  thingies@2.6.1(tslib@2.8.1):
     dependencies:
       tslib: 2.8.1
 
@@ -20291,7 +20298,7 @@ snapshots:
 
   webidl-conversions@8.0.1: {}
 
-  webpack-cli@7.2.1(js-yaml@4.2.0)(json5@2.2.3)(webpack-dev-server@5.2.5)(webpack@5.105.2):
+  webpack-cli@7.2.1(js-yaml@4.2.0)(json5@2.2.3)(webpack-dev-server@5.2.6)(webpack@5.105.2):
     dependencies:
       '@discoveryjs/json-ext': 1.1.0
       commander: 14.0.3
@@ -20305,33 +20312,33 @@ snapshots:
     optionalDependencies:
       js-yaml: 4.2.0
       json5: 2.2.3
-      webpack-dev-server: 5.2.5(tslib@2.8.1)(webpack-cli@7.2.1)(webpack@5.105.2)
+      webpack-dev-server: 5.2.6(tslib@2.8.1)(webpack-cli@7.2.1)(webpack@5.105.2)
 
   webpack-dev-middleware@7.4.5(tslib@2.8.1)(webpack@5.105.2):
     dependencies:
       colorette: 2.0.20
-      memfs: 4.57.8(tslib@2.8.1)
+      memfs: 4.65.0(tslib@2.8.1)
       mime-types: 3.0.2
       on-finished: 2.4.1
-      range-parser: 1.2.1
+      range-parser: 1.3.0
       schema-utils: 4.3.3
     optionalDependencies:
       webpack: 5.105.2(@swc/core@1.15.46(@swc/helpers@0.5.18))(esbuild@0.28.1)(postcss@8.5.15)(webpack-cli@7.2.1)
     transitivePeerDependencies:
       - tslib
 
-  webpack-dev-server@5.2.5(tslib@2.8.1)(webpack-cli@7.2.1)(webpack@5.105.2):
+  webpack-dev-server@5.2.6(tslib@2.8.1)(webpack-cli@7.2.1)(webpack@5.105.2):
     dependencies:
       '@types/bonjour': 3.5.13
       '@types/connect-history-api-fallback': 1.5.4
       '@types/express': 4.17.25
-      '@types/express-serve-static-core': 4.19.8
+      '@types/express-serve-static-core': 4.19.9
       '@types/serve-index': 1.9.4
       '@types/serve-static': 1.15.10
       '@types/sockjs': 0.3.36
       '@types/ws': 8.18.1
       ansi-html-community: 0.0.8
-      bonjour-service: 1.4.2
+      bonjour-service: 1.4.4
       chokidar: 3.6.0
       colorette: 2.0.20
       compression: 1.8.1
@@ -20349,10 +20356,10 @@ snapshots:
       sockjs: 0.3.24
       spdy: 4.0.2
       webpack-dev-middleware: 7.4.5(tslib@2.8.1)(webpack@5.105.2)
-      ws: 8.21.0
+      ws: 8.21.1
     optionalDependencies:
       webpack: 5.105.2(@swc/core@1.15.46(@swc/helpers@0.5.18))(esbuild@0.28.1)(postcss@8.5.15)(webpack-cli@7.2.1)
-      webpack-cli: 7.2.1(js-yaml@4.2.0)(json5@2.2.3)(webpack-dev-server@5.2.5)(webpack@5.105.2)
+      webpack-cli: 7.2.1(js-yaml@4.2.0)(json5@2.2.3)(webpack-dev-server@5.2.6)(webpack@5.105.2)
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -20409,7 +20416,7 @@ snapshots:
       watchpack: 2.5.2
       webpack-sources: 3.5.0
     optionalDependencies:
-      webpack-cli: 7.2.1(js-yaml@4.2.0)(json5@2.2.3)(webpack-dev-server@5.2.5)(webpack@5.105.2)
+      webpack-cli: 7.2.1(js-yaml@4.2.0)(json5@2.2.3)(webpack-dev-server@5.2.6)(webpack@5.105.2)
     transitivePeerDependencies:
       - '@minify-html/node'
       - '@swc/core'
