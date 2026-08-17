@@ -200,15 +200,18 @@ Backup считается рабочим только после регуляр�
 
 ## Ограничения текущего состояния
 
-- VPS, DNS, TLS и GitHub Environments ещё не настроены.
+- VPS host подготовлен: SSH hardening, UFW, fail2ban, Docker, swap и deploy user.
+- DNS, TLS и GitHub Environments ещё не настроены.
 - Workers собираются, но отключены до реализации RabbitMQ consumers.
 - Database migrations будут добавлены вместе с выбранным PostgreSQL adapter/ORM.
 - Централизованные logs, metrics и alerts ещё не развёрнуты; домены `logs.*` и
   `status.*` только зарезервированы.
-- Первый remote deploy выполняется только после отдельного provisioning runbook.
+- Первый remote deploy выполняется после внешних проверок из
+  [provisioning runbook](../docs/operations/provisioning.md).
 
 ## Связанная документация
 
 - [CI/CD и affected builds](../docs/operations/ci-cd.md)
 - [VPS, безопасность и ресурсы](../docs/operations/vps.md)
+- [Provisioning VPS](../docs/operations/provisioning.md)
 - [Architecture decision](../docs/adr/0004-environments-and-delivery.md)

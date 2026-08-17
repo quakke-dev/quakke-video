@@ -85,7 +85,8 @@ RabbitMQ Management доступен через Nginx:
 
 ## SSH и операционная система
 
-- отдельный пользователь `deploy`;
+- отдельный интерактивный администратор `test`;
+- отдельный пользователь `deploy` без `sudo` для GitHub Actions;
 - SSH только по Ed25519 key;
 - `PermitRootLogin no`;
 - `PasswordAuthentication no`;
@@ -98,6 +99,9 @@ RabbitMQ Management доступен через Nginx:
 
 Доступ пользователя `deploy` к Docker эквивалентен root-доступу. Ключ хранится только
 в GitHub Environment secrets и регулярно ротируется.
+
+Пошаговая настройка нового host описана в
+[provisioning runbook](provisioning.md).
 
 ## Стратегия резервного копирования
 

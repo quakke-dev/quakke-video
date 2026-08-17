@@ -22,6 +22,8 @@ ADR описывают, почему решение было принято. О�
 - [CI/CD](operations/ci-cd.md) — branch flow, affected calculation, jobs и GitHub
   Environments.
 - [VPS](operations/vps.md) — capacity, network policy, SSH, безопасность и backups.
+- [Provisioning VPS](operations/provisioning.md) — пошаговый bootstrap нового
+  сервера, Docker, firewall и CI deploy user.
 
 ## Локальная документация
 
