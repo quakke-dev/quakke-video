@@ -1,6 +1,12 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
+import { loadEnvFile } from 'node:process';
+import { resolve } from 'node:path';
+
+if (!process.env.APP_ENV) {
+  loadEnvFile(resolve(process.cwd(), '.env.local'));
+}
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

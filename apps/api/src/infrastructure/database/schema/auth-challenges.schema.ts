@@ -34,7 +34,7 @@ export const authChallenges = pgTable(
       length: 64,
     }).notNull(),
 
-    expiresAt: timestamp('expiresAt', {
+    expiresAt: timestamp('expires_at', {
       withTimezone: true,
       mode: 'date',
     }).notNull(),

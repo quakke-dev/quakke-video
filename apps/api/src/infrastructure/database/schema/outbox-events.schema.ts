@@ -28,7 +28,7 @@ export const outboxEvents = pgTable(
 
     payload: jsonb('payload').$type<Record<string, unknown>>().notNull(),
 
-    occuredAt: timestamp('occured_at', {
+    occurredAt: timestamp('occurred_at', {
       withTimezone: true,
       mode: 'date',
     })
@@ -38,9 +38,7 @@ export const outboxEvents = pgTable(
     publishedAt: timestamp('published_at', {
       withTimezone: true,
       mode: 'date',
-    })
-      .notNull()
-      .defaultNow(),
+    }),
 
     attempts: integer('attempts').notNull().default(0),
 
