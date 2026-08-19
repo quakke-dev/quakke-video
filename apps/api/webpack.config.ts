@@ -1,12 +1,21 @@
-const { NxAppWebpackPlugin } = require('@nx/webpack/app-plugin');
-const { join } = require('path');
+import { NxAppWebpackPlugin } from '@nx/webpack/app-plugin';
+import { join } from 'node:path';
+import type { Configuration } from 'webpack';
 
-module.exports = {
+const config: Configuration = {
   resolve: {
     alias: {
+      '@fastify/static': false,
+      '@fastify/view': false,
       'pg-native': false,
     },
   },
+  ignoreWarnings: [
+    {
+      module: /node_modules[\\/]ret[\\/]dist[\\/]/,
+      message: /Failed to parse source map/,
+    },
+  ],
   output: {
     path: join(__dirname, 'dist'),
     clean: true,
@@ -28,3 +37,5 @@ module.exports = {
     }),
   ],
 };
+
+export default config;
